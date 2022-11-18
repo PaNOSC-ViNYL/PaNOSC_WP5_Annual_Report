@@ -1,0 +1,722 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{fancyhdr}
+\usepackage[none]{hyphenat}
+\usepackage{rotating}
+\usepackage{anyfontsize}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% For subfigures
+\usepackage{caption}
+\usepackage{subcaption}
+% Get rid of the indent of the first line
+\edef\restoreparindent{\parindent=\the\parindent\relax}
+\usepackage{parskip}
+% Fix text out of margin
+\emergencystretch 3em
+% Set date format
+\usepackage[ddmmyyyy]{datetime}
+% Set fonts
+% \usepackage{fontspec}
+% \setmainfont{Muli}[
+%     Path = fonts/ ,
+%     Extension = .ttf ,
+%     UprightFont = *-Regular ,
+%     ItalicFont = *-Italic ,
+%     BoldFont = *-Bold ,
+%     BoldItalicFont = *-BoldItalic
+% ]
+% \setsansfont{Muli-Black}[
+%     Path = fonts/ ,
+%     Extension = .ttf ,
+%     ItalicFont = *Italic
+% ]
+% Set page margin
+\usepackage{geometry}
+\geometry{a4paper,
+            % total={175mm,257mm}, %space for content
+            headheight=80pt,
+            headsep=2pt,
+            % top=3cm,
+            bottom=2.5cm,
+            left=2cm,
+            right=1.75cm}
+% Set the name of the table of contents
+\usepackage{url}                                                  % for correct typesettings of URLs
+\usepackage{hyperref}                                             % for sophisticated linking of urls, dois, pictures, tables, etc.
+\hypersetup{
+    unicode=true,                                                 % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,                                              % show Acrobat’s toolbar?
+    pdfmenubar=true,                                              % show Acrobat’s menu?
+    pdffitwindow=false,                                           % window fit to page when opened
+    pdfstartview={FitH},                                          % fits the width of the page to the window
+    pdfauthor={C. Fortmann-Grote},                                           % author
+    pdftitle={D5.4: VINYL software tested, documented, and released, including integration into interactive data analysis workflow with feedback loop},   % title
+    pdfsubject={PaNOSC WP5 (ViNYL) Deliverable D5.4},                             % subject of the document
+    pdfcreator={pdflatex},                                         % creator of the document
+    pdfnewwindow=true,                                            % links in new PDF window
+    colorlinks=true,                                              % false: boxed links; true: colored links
+    linkcolor=black,                                                % color of internal links (change box color with linkbordercolor)
+    citecolor=blue,                                                % color of links to bibliography
+    filecolor=blue,                                               % color of file links
+    urlcolor=blue                                                 % color of external links
+}
+
+
+\pagestyle{fancy}
+\fancyhead{} % clear all header fields
+\fancyfoot{} % clear all footer fields
+\renewcommand{\headrulewidth}{0pt} % clear the header ruler line
+\setlength{\footskip}{14pt}
+\fancyfoot{} % clear all footer fields
+\fancyfoot[R]{\hspace{1em}}
+% \fancyfoot[c]{\begin{tabular}{c}
+% \includegraphics[width=\textwidth, valign=b]{footer.pdf}& \\
+% \end{tabular}}
+\fancyfoot[L]{\hspace{1cm} \includegraphics[width=0.95\textwidth]{footer.pdf}}
+% \cfoot{\includegraphics[width=0.95\textwidth]{footer.pdf}}
+
+% Set line spacing
+\emergencystretch 3em
+\setstretch{1.2}
+% \setlength{\footskip}{10pt}
+
+\begin{document}
+% \thispagestyle{empty}
+\chead{\includegraphics[width=\textwidth]{header.pdf}}
+
+{
+	\centering
+    \begin{onehalfspace}
+    \sffamily
+     \vspace*{5ex}
+	{\fontsize{20}{24}\selectfont PaNOSC \par}
+	{\fontsize{20}{24}\selectfont Photon and Neutron Open Science Cloud \par}
+	{\fontsize{20}{24}\selectfont H2020-INFRAEOSC-04-2018 \par}
+	{\fontsize{20}{24}\selectfont Grant Agreement Number: 823852 \par}
+	\end{onehalfspace}
+
+	\vspace*{7ex}
+	\includegraphics[width=\textwidth]{PaNOSClogo_web_RGB.pdf}\par
+	\vfill
+	{\large \textbf{\sffamily D5.4: VINYL software tested, documented, and released, including integration into interactive data analysis workflow with feedback loop}}\par
+} % end of centering
+
+
+\includegraphics[width=1.27in]{by.eps}\par
+This work is licensed under a Creative Commons Attribution 4.0 International License\\
+(\url{http://creativecommons.org/licenses/by/4.0/})\par
+
+% \vspace*{0ex}
+\newpage
+
+% Set footer for the second page
+% \setlength{\footnotesep}{50pt}
+% \setlength{\footskip}{0pt}
+\fancyfoot{} % clear all footer fields
+\fancyfoot[R]{\thepage}
+% \fancyfoot[c]{\begin{tabular}{c}
+% \includegraphics[width=\textwidth, valign=b]{footer.pdf}& \\
+% \end{tabular}}
+\fancyfoot[L]{\hspace{1cm} \includegraphics[width=0.95\textwidth]{footer.pdf}}
+
+
+{ %Front page
+\restoreparindent
+% \renewcommand{\arraystretch}{1.2} % change table row height
+
+{\sffamily\huge Project Deliverable Information Sheet \par}
+
+\begin{center}
+\begin{tabular}{ | m{5.2cm}| m{10.7cm} | }
+\hline
+Project Reference No. & 823852 \\
+\hline
+Project acronym: & PaNOSC \\
+\hline
+Project full name: & Photon and Neutron Open Science Cloud \\
+\hline
+H2020 Call: & INFRAEOSC-04-2018 \\
+\hline
+Project Coordinator: & Andy Götz (andy.gotz@esrf.fr) \\
+\hline
+Coordinating Organization: & ESRF \\
+\hline
+Project Website: & www.panosc.eu \\
+\hline
+  Deliverable No: & D5.4: VINYL software tested, documented, and released, including integration into interactive data analysis workflow with feedback loop \\
+\hline
+Deliverable Type: & Report + Software \\
+\hline
+Dissemination Level: & Public \\
+\hline
+Contractual Delivery Date: & 30/11/2022 \\
+\hline
+Actual Delivery Date: & \today \\
+\hline
+EC project Officer: & Ren\'e Martins \\
+\hline
+\end{tabular}
+\end{center}
+
+{\large \textbf{Document Control Sheet} \par}
+\begin{center}
+\begin{tabular}{ | m{5.2cm}| @{}c@{} | }
+\hline
+\textbf{Document}
+&
+\begin{tabular}{| m{10.7cm} |}
+  Title: D5.4:  VINYL software tested, documented, and released, including integration into interactive data analysis workflow with feedback loop \\\hline
+Version: 1 \\\hline
+Available at: \\\hline
+Files: 1 \\\hline
+\end{tabular}
+\tabularnewline\hline
+\textbf{Authorship}
+&
+\begin{tabular}{| m{10.7cm} |}
+Written by: Carsten Fortmann-Grote \\\hline
+Contributors:   Mads Bertelsen,
+Stella d'Ambrumenil,
+Juncheng E,
+Aljo\v{s}a Hafner,
+Gergely Norbert Nagy,
+Shervin Nourbakhsh,
+Mousumi Upadhyay Kahaly \\\hline
+Reviewed by: Jordi Bodera Sempere\\\hline
+Approved:  Andy Götz\\\hline
+\end{tabular}
+\tabularnewline\hline
+\end{tabular}
+\end{center}
+
+{\large \textbf{List of participants} \par}
+\begin{center}
+    \begin{tabular}{|m{3.0cm}|m{9.5cm}|m{3cm}|}
+        \hline
+        \textbf{Participant No.} & \textbf{Participant organisation name} & \textbf{Country} \\
+        \hline
+        1 & European Synchrotron Radiation Facility (ESRF) & France \\
+        \hline
+        2 & Institut Laue-Langevin (ILL) & France \\
+        \hline
+        3 & European XFEL (XFEL.EU) & Germany \\
+        \hline
+        4 & The European Spallation Source (ESS) & Sweden \\
+        \hline
+        5 & Extreme Light Infrastructure Delivery Consortium (ELI-DC) & Belgium \\
+        \hline
+        6 & Central European Research Infrastructure Consortium (CERIC-ERIC) & Italy \\
+        \hline
+        7 & EGI Foundation (EGI.eu) & The Netherlands \\
+        \hline
+    \end{tabular}
+\end{center}
+
+}%End front page
+
+% Table of contents
+\newpage
+\addtocontents{toc}{\protect\thispagestyle{fancy}}
+\newpage
+\tableofcontents
+\newpage
+% End Table of contents
+
+\section{Abstract}
+We report on the Deliverable D5.4 in work package 5 (Virtual Neutron and X--ray
+Laboratory ---- ViNYL) in the European Union Horizon 2020 project \emph{Photon
+  and Neutron Open Science Cloud ---- PaNOSC}. 
+We report on the latest releases of  software developed under the umbrella of
+ViNYL including test suites, documentation. In addition, we report on a use case
+where ViNYL software is employed in an iterative data analysis workflow in serial
+femtosecond crystallography. 
+
+\section{Introduction}
+This section outlines the contributions made by the European Spallation Source (ESS) to the PaNOSC Work package 5 on simulation. A powerful Python API for the popular simulation package McStas was created in a manner consistent with the standards proposed by WP 5. The ESS also participated in design of the libpyvinyl package and instrument database.
+
+Arguably the main purpose of the PaNOSC WP 5 simulation project have been to harmonize the user interface for simulations of X-ray and neutron beamlines. It was decided that a Python interface suitable for Jupyter Notebooks was the best solution. For neutron scattering, the \href{https://www.mcstas.org}{McStas package} is the standard tool for instrument simulations, yet it has a specialized user interface built on the C programming language. McStas has a sister project called McXtrace that simulates X-ray instrumentation. The main contribution from the ESS have been the McStasScript Python API that allows nearly full access to McStas/McXtrace features through an elegant Python interface, and even offers some functionality in addition to the basic package. The ESS have also been involved in defining standards for handling beam descriptions as openPMD files, development of the common Python user interface LibPyvinyl and contributed to the design of the instrument database. This document provides an overview of these contributions.
+
+\section{McStasScript}
+
+\subsection{Scope and purpose of the package}
+The McStasScript package aims to be an alternative user interface that covers the vast majority of McStas features. McStas itself is a Monte Carlo ray-tracing simulation code that covers neutron beamlines from source to detector, including sample scattering. Since the same software is used for the entire beamline, access to McStas from Python covers task 5.2 to 5.4, as it provides source simulation, beamline simulation and sample physics. Before McStasScript, McStas offered two ways of working with instrument simulations. Central to both are the instrument file that describes the instrument to be simulated in a C meta language. In this file the instrument is built from components and it is possible to have input parameters along with calculations. It is possible to run a simulation by using the command line tools to execute such a simulation by providing the instrument file, and then plot the resulting data using a different command line tool. McStas also provides a GUI with a text editor that provides some help features when inserting components, and then dialog boxes for running simulations and viewing the data. The data is always written to disk, usually as text files with metadata in a specialized format.
+
+McStasScript thus provides a third way of writing McStas instruments, where everything can be done from the Python API. One defines an instrument object, adds components, parameters and calculations as necessary, and then runs the simulation from within the Python environment. The data is returned as objects with metadata and the numerical data is available as standard numpy arrays, making it easy to work with the generated data.
+
+In order to harmonize the API's of the different simulation packages for X-ray and neutron scattering, WP5 collaborated on a base package for simulations called libpyvinyl. This package provides base classes from which one can build simulation packages, and these simulations packages will thus follow a similar logic and share the most important method names. The libpyvinyl package is in this way the answer to the harmonization part of task 5.1, and McStasScript is built upon this base package.
+
+\subsection{Current status of the project}
+The main goals of the project has been achieved and there are a number of users of the package both within PaNOSC and outside. It has grown into a healthy project and is foreseen to continue development after the PaNOSC project. This section provides an overview of the status of the project from a technical standpoint.
+
+\subsubsection{Repository}
+The project is open source and available on the WP5 github repository. There are two repositories, one for the main package and a separate one for example notebooks, this makes it easier for users to get examples in a location more easily accessible than the install location. Links to the repositories are shown in table \ref{tab:links}. The McStasScript-notebook repository contributes to deliverable 5.3 which requires simulation examples in the form of notebooks.
+
+\begin{table}[h!!!]
+\centering
+\begin{tabular}{l|l}
+Name & Link \\\hline
+McStasScript & \href{https://github.com/PaNOSC-ViNYL/McStasScript}{https://github.com/PaNOSC-ViNYL/McStasScript} \\
+McStasScript-notebooks &  \href{https://github.com/PaNOSC-ViNYL/McStasScript-notebooks}{https://github.com/PaNOSC-ViNYL/McStasScript-notebooks}
+\end{tabular}
+\caption{\label{tab:links} Links to McStasScript repositories.}
+\end{table}
+
+\subsubsection{Tests}
+The package has good coverage with unit tests and these are used in continuous integration (CI). In addition, integration tests are available, as these do Monte Carlo simulations and require a local McStas installation, these are not included in CI.
+
+\subsubsection{Installation}
+It is possible to install the package through the Python package index pip as shown below. The package can also be installed from source by cloning the github repository. Regardless of the method, configuration is necessary to tell McStasScript where the local McStas/McXtrace installation is located.
+
+\begin{verbatim}
+pip install McStasScript
+\end{verbatim}
+
+\subsubsection{Documentation}
+The documentation is available at \href{https://mads-bertelsen.github.io}{https://mads-bertelsen.github.io}, where significant efforts have been made to provide comprehensive documentation. The documentation includes the purpose of the package, how to use it and tutorials on a large part of the McStas package as well as the McStas Union components. The release of the documentation along with online availability of the package was the ESS contribution to the completion of deliverable 5.2.
+
+\subsubsection{Dissemination}
+It is important to inform the community about the package in order to create a user community. Table \ref{tab:Dissemination} contains an overview of events where McStasScript was shown outside of PaNOSC events.
+
+\begin{table}[h!!!]
+\centering
+\begin{tabular}{l|l}
+Event & Format \\\hline
+ECNS 2019 & Poster \\
+ICANS 2019 & Poster and Presentation \\
+SNS visit & Presentation for simulation group \\
+HighNESS McStas course & Presentation \\
+ISIS McStas course & Presentation \\
+MLZ Garching group meeting & Presentation and online demo \\
+PNPI group meeting & Presentation \\
+ESS McStas days & Presentation and quiz exercises \\
+ICNS 2022 & Poster and award speech for Instrumentation and Innovation prize \\
+ESS-ILL User meeting 2022 & Poster \\
+\end{tabular}
+\caption{\label{tab:Dissemination} Overview of McStasScript dissemination activities.}
+\end{table}
+
+\subsubsection{User base}
+It is difficult to judge the size of the current McStasScript user base as the download statistics include downloads of the package made through continuous integration, bots that mirror the package and so forth. There have been days with more than 300 downloads of the package, but it has not been possible to find a total number of downloads across all versions. Users provide issues to the github project, pull requests are being submitted and support requests are regularly received by the author over e-mail. It can be concluded that the package is reaching some level of adoption within the McStas/McXtrace community. Known users are located at ILL, SNS, KU, DTU, MLZ, TUDelft and have even been used to design X-ray optics for space based telescope.
+
+\subsection{McStasScript features}
+This section aims to provide an overview of the feature set of McStasScript.
+
+\subsubsection{Write instrument}
+An instrument is made by creating an instrument object, and this instrument object can then have components added. These are a sequence of smaller codes that describe the beamline, and are each represented by a file on the users disk. McStasScript parses these files to internalize information on their parameters and units. It is possible to add components to any point in the sequence of components, but it is most common to place new components at the end. The instrument object inherits from the LibPyVinyl calculator class in order to adhere to the standardized user interface created by WP5.
+
+\subsubsection{Parameters}
+It is also possible to add parameters to an instrument, these can be changed easily between runs. When changing components, McStas requires the underlying C code to be recompiled, but this can be avoided when only changing parameters. McStasScript has yet to implement code that avoids compiling when unnecessary, this is still the users responsibility.
+
+\subsubsection{Error checking}
+When writing a McStas instrument there are many possible ways to make an error that would result in the generated C code to fail to compile. A number of these are recognized by McStasScript and reported immediately instead of only when the user attempts to run the simulation. The exceptions raised by McStasScript are more specific that the compiler errors generated by McStas. Not all errors are caught, but the compiler output can be seen from McStasScript.
+
+\subsubsection{Help features}
+McStasScript contains a number of help features ranging from simple text overviews of the parameters, variables and components to diagrams of components included in an instrument. The help features can be used to find the right component in the library and to understand the parameters of components even before they are included in the instrument. When components are included in the instrument, colored text is used to show different states of the component parameters, such as default, required and set by user. The generated instrument diagrams such as seen in figure \ref{fig:diagram} are great for getting a quick overview of an instrument and are only available in McStasScript.
+
+\begin{figure}[h!!!]
+\centering
+\includegraphics[width=0.5\textwidth]{figures/diagram_example.png}
+\caption{\label{fig:diagram}Example of diagram from McStasScript. In widget mode one can hover the mouse over the left side of the boxes to see further info on each component.}
+\end{figure}
+
+\subsubsection{Run simulation}
+The simulation can be executed from the Python environment, this is achieved with a system call using the subprocess module. The user can use the same controls available on the command line tools, such as setting the number of rays, location of data output, enabling gravity and selecting how many CPU cores will be used. The actual run method is called backengine to conform the LibPyVinyl standard.
+
+\subsubsection{Return of data}
+Running a simulation returns data as a list of Python objects corresponding to each monitor in the instrument. These contain metadata such as the used parameters and information about the monitor as well as the actual data in nunmpy arrays. The objects also contain preferences on how this object should be plotted so the plotting tools in McStasScript can use appropriate settings when plotting the included data. 
+
+\subsubsection{Widgets}
+McStasScript also contains widgets specifically designed for use in Jupyter Notebooks. One widget can take a list of data objects and plot each of them with easy access to plot options and colorscales in the widget. The other widget takes an instrument object and is able to run the simulation with parameters set by the user, this widget shows the data from the simulation just as the plotting widget would. An example of the run widget can be seen in figure \ref{fig:widget}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/widget.png}
+\caption{\label{fig:widget}Example of run widget from McStasScript. Here showing scattering in an imaging calibration sample with several embedded materials. Notice the streaks of lower intensity behind materials that scatter / absorb more than the others.}
+\end{figure}
+
+\clearpage
+\section{openPMD}
+The openPMD \href{https://www.openpmd.org}{https://www.openpmd.org} format is to be used for transferring descriptions of beams between different simulations. The ESS contributed to the beam standard that was proposed and included into the openPMD standard, which was an objective of task 5.1 and deliverable 5.1.
+
+\subsection{openPMD McStas compatability}
+A McStas components for reading and writing by Shervin and some review was performed, but these components have not made it to the McStas distribution. This should be completed before the end of the project.
+
+\section{LibPyVinyl development}
+ESS contributed to the development of the LibPyVinyl package from the early stages of design, including requirements. The first version of the parameter class and parameter collection class were contributed.
+
+\section{Instrument database}
+\subsection{Scope and purpose}
+Facility users have hardly access to complete and up-to-date instrument descriptions to run sample simulations and they are difficult to manipulate for a user not expert in the specific simulation software. 
+The libpyvinyl API offers the high level interface to harmonize the interaction with an instrument described with different simulation softwares.
+The instrument database has been designed to collect in a central place instrument descriptions created with softwares adopting the libpyvinyl API. Users are then able to access the instrument with few lines of code and run the simulation with a set of implemented samples (expandable). The instrument comes with the set of high level parameters defining the settings of the instrument that the user is supposed to be able to manipulate at the facility for the data acquisition, while all internal complexities are hidden.
+
+\subsection{Current status of the project and contributions}
+The structure of the database have been defined and a dedicated API is available to list its content and access the required instrument description.
+Only few pilot instruments are described and are supposed to be used as examples for implementing new instruments.
+A complete validation of the instruments has not been performed.
+
+The instrument database and its API designs have been leaded by ILL and co-designed with ESS and EuXFEL.
+
+%ESS have been involved in design of the instrument database and the structure of the API. 
+It is envisioned several ESS instruments and sample environments will be submitted to the database soon, further testing and extending the system as needed. The instrument database will also address task 5.3 at a higher level of ambition than foreseen at the start of the project.
+
+\subsection{Repository}
+The database defined as a git repository hosted on the WP5 github organization as well as
+he API to access the insturment database and make insturment descriptions available.
+
+\href{https://github.com/PaNOSC-ViNYL/instrument_database}{https://github.com/PaNOSC-ViNYL/instrument\_database}
+
+
+\href{https://github.com/PaNOSC-ViNYL/instrument_database_API}{https://github.com/PaNOSC-ViNYL/instrument\_database\_API}
+
+\subsection{Structure}
+\subsection{Maintainance and contribution policy}
+
+\subsection{Installation and access}
+The repository can be cloned in local using git commands:
+\begin{verbatim}
+git clone  --recurse-submodules https://github.com/PaNOSC-ViNYL/instrument_database.git
+\end{verbatim}
+
+%or via the Python package index pip:
+%\begin{verbatim}
+%pip install XXX
+%\end[verbatim]
+
+\subsection{Documentation}
+The documentation is self contained in the repository as Markdown file. 
+The documentation targets both users of the instrument database and developers implementing instrument descriptions.
+
+\subsection{Dissemination}
+It is crucial to have a significant contribution from the research facilities by providing accurate and complete instrument descriptions and to maintain them.
+A workshop dedicated to WP5 tools and prospects would be ideal to reach both expert and non-expert simulation users as well as developers.
+
+\subsection{User base}
+Currently limited but potentially every user submitting a proposal for beam time.
+
+
+\subsection{Features}
+
+
+\section{OASYS}
+
+\subsection{Introduction}
+
+OASYS (OrAnge SYnchrotron Suite) is an open source environment for modelling X-ray beamlines and experiments. It is based on Orange (\url{https://orangedatamining.com/}) framework which provides an easy-to-use graphical user interface (GUI). Various OASYS widgets (optical elements) are connected to each other, thus creating a workflow (beamline). This is particularly useful for X-ray optics simulations, as the wavefront propagation direction is well-defined and known in advance (from the source to the experimental station).
+
+Several successful calculation packages exist and are actively maintained by the community. Among the most popular are \emph{SHADOW} for ray-tracing simulations and \emph{SRW} for wavefront propagation. During the PaNOSC project, we have addressed several different topics. This chapter provides an overview of all the development. All PaNOSC-specific widgets can be installed through OASYS1-PaNOSC (shown in Fig. \ref{fig:toolbox} package hosted on PyPI and available through the internal add-on manager. All contributions to the OASYS part described below come from CERIC-ERIC and ESRF.
+
+\begin{figure}[htb]
+    \centering
+    \setkeys{Gin}{width=\linewidth}
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics{figures/panosc_toolbox.png}
+        \caption{}
+        \label{fig:toolbox}
+    \end{subfigure}
+    \hfil
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics{figures/github_remote_access.png}
+        \caption{}
+        \label{fig:github_access}
+    \end{subfigure}% trailing space between `subfigure` environments  had to be removed
+    \caption{(a) PaNOSC widget toolbox. (b) Remote repository of OASYS workspaces (OWS) access through a widget in the GUI.}
+\end{figure}
+
+\begin{table}[ht]
+  \label{tab:repos}
+  \centering
+  \begin{center}
+    \caption{Relevant OASYS repositories.}
+    \begin{tabular}{l p{10cm}l}
+      \hline
+      OASYS Panosc toolbox code & \url{https://github.com/PaNOSC-ViNYL/OASYS1-PaNOSC} \\
+      Wiser repository & \url{https://github.com/oasys-elettra-kit/OASYS1-Wiser} \\
+      OASYS local Docker container & \url{https://gitlab.elettra.eu/panosc/ceric/oasys-local-docker} \\
+      OASYS Jupyter Docker container & \url{https://gitlab.elettra.eu/panosc/jupyter-desktop-oasys} \\
+      Dockerhub release & \url{https://hub.docker.com/r/ceric/panosc-oasys-local}\\
+      E-learning Docker container & \url{https://github.com/pan-training/Docker/tree/main/wp8-summerschool} \\
+      PaNOSC OWS database & \url{https://github.com/PaNOSC-ViNYL/Oasys-PaNOSC-Workspaces} \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\subsection{Wiser}
+
+Wiser is a new package for wavefront propagation calculations based on Python implementation of WISE calculation code which stemmed from and is still maintained by Elettra Synchrotron. It is targeted at simulating the optical performance of X-ray mirrors. Propagation is done using Huygens-Fresnel integratal and allows for simultaneous 2-dimensional calculations of both figure errors (profiles) and roughness (statistical). Several optical elements have been implemented so far: plane mirror, elliptic mirror, spherical mirror, slit, detector, grating.
+
+OASYS implementation consists of several abstraction layers of which the user interacts only with the top-most one - OASYS1-Wiser (available for installation on PyPI and through internal OASYS add-on manager). The back-end is a numerically optimized (able to use multi-core CPU processing) stand-alone Python library \emph{Wiser} which then interacts with \emph{WOFRY} package which strives to be a generic high-level abstraction of wavefront propagation workflows in OASYS. 
+
+The development was done in three stages, it first focused on numerical optimization of Wiser. Since solving the Huygens-Fresnel integral is very expensive, this was a crucial step in usability and accessibility of the code. A few different optimization methods have been used. Using \emph{numba} Python library for just-in-time compiling of calculation kernel, a speed-up on the order of 10-100x has been reached. Afterwards, several new optical elements had to be implemented and a testing phase was conducted. When numerical consistency has been confirmed, work started on the GUI part. At present, all the elements beside the grating are available and ready-to-use as widgets in OASYS.
+
+The package has been presented at the SPIE 2020 conference (  M. Manfredda, A. Hafner, S. Gerusina, N. Mahne, A. Simoncig, M. Zangrando, L. Raimondi, "WISER wavefront propagation simulation code: advances and applications," Proc. SPIE 11493, Advances in Computational Methods for X-Ray Optics V, 114930B (16 September 2020); https://doi.org/10.1117/12.2568574 ) and since then used in several applications (see Section \ref{subsec:panosc_use_cases}).
+
+\subsection{COMSYL}
+
+TODO: Manuel, please write a short paragraph!
+
+\subsection{Remote usage}
+
+Being based on Orange which itself is using PyQT, OASYS is a standalone desktop application. By default it offers no remote access and/or collaborative development capabilites. A major portion of development has thus been focused on these features.
+
+\subsubsection{Remote workspace access}
+
+As part of PaNOSC deliverable D5.3, we have developed a widget for access to a remote repository of OWS workspaces (binary files in which OASYS projects are saved). The widget is able to read the file content of an arbitrary github repository where the files are be stored. The metadata description is read automatically from the workspace. It allows for access to several online repositories and opening of the workspace directly from within OASYS (Fig. \ref{fig:github_access}).
+
+\subsubsection{Access to computing resources}
+\label{sec:docker}
+
+Running programs with rich GUIs remotely is non-trivial. One option is to use remote desktop solutions, but they are non-collaborative and require quite extensive user permissions. HPC servers normally also do not provide desktop environments. We have developed and experimented with several remote access options (see deliverable D5.2), but only the final one is presented and described here. A solution was developed through which arbitrary GUI software can be run as a Jupyter hub plugin as shown in Fig. \ref{fig:jupyter_select}. This links OASYS package with the rest of the WP5 simulation codes and can be installed into any existing Jupyter hub instance and allows OASYS to be run in a web browser (Fig. \ref{fig:oasys_run}), accessing any dedicated computing resources. This also avoids complex user permissions and relegates them to the Jupyter hub instance.
+
+\begin{figure}[htb]
+    \centering
+    \setkeys{Gin}{width=\linewidth}
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics{figures/jupyter_select_desktop.png}
+        \caption{}
+        \label{fig:jupyter_select}
+    \end{subfigure}
+    \hfil
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics{figures/jupyter_oasys_run.png}
+        \caption{}
+        \label{fig:oasys_run}
+    \end{subfigure}% trailing space between `subfigure` environments  had to be removed
+    \caption{(a) Running the XFCE desktop environment from within Jupyter hub. (b) A new browser tab opens with XFCE desktop, providing a way to run OASYS inside the web browser while sharing the computing resources with the Jupyter hub instance.}
+    \label{fig:oasysJupyter}
+\end{figure}
+
+\subsubsection{E-learning}
+
+Building on the solution described in Sec. \ref{sec:docker}, a Docker container has been prepared for the purpose of E-learning. The said Docker container has been successfully used during the PaNOSC summer school organized by the training workpackage, WP8. It was further enriched with all necessary software for the course: Crispy, McStas and OASYS. Students could then seamlessly access all the required software without any installation on local machines and sharing the remote computing resources.
+
+\subsection{openPMD}
+
+As a part of task 5.1 and deliverable D5.1, we (CERIC-ERIC) have developed OASYS support for openPMD format and contributed to the standard for ray-tracing simulations. Two specific widgets, one for reading and one for writing openPMD files, are a part of the PaNOSC toolbox (Fig. \ref{fig:toolbox}).
+
+\subsection{Beyond optics - Full beamline simulations}
+
+Synergy between different simulation codes has been an important part of the developments in WP5. As OASYS simulates the X-ray spot parameters at various points along the beamline, the addition of beam-sample interaction through other codes was sought. Specifically, GAPD calculator found in Simex was used for demonstration purposes and is a part of deliverable D5.3. A prototype widget has been designed that can be seamlessly connected to the standard workflow. With this, one uses the result of X-ray propagation at the sample position and performs diffraction calculations on it. The architecture of the widget was further improved and it now allows for different calculators to be implemented in the future. A checking mechanism whether a given calculation code is properly installed on the system has also been implemented.
+
+TODO: 1 FIGURE
+
+\subsection{OASYS PaNOSC use cases}
+\label{subsec:panosc_use_cases}
+A list of use cases using OASYS, submitted to PaNOSC website is provided in Table \ref{tab:use_cases}. Our of 31 submitted use cases, 5 of them are either direct contributions to OASYS code or connected to infrastructural uses and setup of OASYS, i. e. remote access, e-learning, etc. This amounts to 16\% of all use cases, implying a significant impact in the community.
+
+\begin{table}[h!!!]
+\centering
+\begin{tabular}{c l}
+\# & Name \\\hline
+8 & \href{https://www.panosc.eu/use-cases/use-case-8-remote-collaborative-access-to-beamline-optics-simulations/}{Remote, collaborative access to beamline optics simulations} \\
+12 & \href{https://www.panosc.eu/use-cases/panosc-use-case-12-k-b-system-performance-analysis/}{K-B System performance analysis} \\
+13 & \href{https://www.panosc.eu/use-cases/panosc-use-case-13-effects-on-the-spot-quality-of-mirror-error-profile-and-source-pointing-instability/}{Effects on the spot quality of the mirror error profile and source pointing instability} \\
+16 & \href{https://www.panosc.eu/use-cases/panosc-use-case-16-coherent-mode-decomposition-of-synchrotron-emission-by-comsyl/}{Coherent mode decomposition of synchrotron emission by COMSYL} \\
+31 & \href{https://www.panosc.eu/use-cases/use-case-31-seamless-connection-of-jupyter-notebooks-and-gui-applications-for-e-learning-purposes/}{Seamless connection of Jupyter notebooks and GUI applications for e-learning purposes}
+\end{tabular}
+\caption{\label{tab:use_cases} Links to PaNOSC use cases linked to OASYS.}
+\end{table}
+
+\section{Contribution from EuXFEL}
+
+\subsection{libpyvinyl development}
+libpyvinyl, the python APIs for Virtual Neutron and x-raY Laboratory, is a python package providing a way to harmonize the user interfaces of neutron and X-ray simulation codes by defining essential base and auxiliary classes for developers of a start-to-end simulation platform. Its source code is hosted at: https://github.com/PaNOSC-ViNYL/libpyvinyl and its documentation can be found at: https://libpyvinyl.readthedocs.io/en/latest.
+
+The base classes are:
+\begin{itemize}
+    \item BaseCalculator: the interface to set parameters and perform calculation.
+    \item BaseData: the representation of the input/output data of a Calculator class.
+    \item BaseFormat: the interface to exchange data between the memory and the file on the disk in a specific format.
+\end{itemize}
+
+The auxiliary classes are:
+\begin{itemize}
+    \item Parameter: the Parameter class describes a single parameter with its limits (valid/invalid range) and unit (if applicable) defined.
+    \item CalculatorParameters: a container for holding all the Parameter objects that pertain to a single Calculator.
+    \item DataCollection: a thin layer interface between the Calculator and DataClass. It aggregates the input and output into a single variable, respectively.
+    \item Instrument: a container for integrating different Calculator objects into a complete start-to-end simulation workflow.
+\end{itemize}
+
+A simple example of the usage of libpyvinyl was created to explain its concept (\url{https://github.com/PaNOSC-ViNYL/libpyvinyl/tree/master/tests/integration/plusminus}). It shows how a simple start-to-end instrument simulation platform can be easily built up with libpyvinyl.
+
+The overarching concept was proposed by Carsten Fortmann-Grote, the BaseCalculator and classes related to data were designed by Juncheng E, the Parameter-relevant classes were designed by Mads Bertelsen and Shervin Nourbakhsh, and the Instrument class was developed by Shervin Nourbakhsh and Juncheng E.
+
+\subsection{SimEx-Lite development}
+
+SimEx-Lite is the core package of the SIMEX platform providing the calculator interfaces and data APIs. It is hosted at \url{https://github.com/PaNOSC-ViNYL/SimEx-Lite}, and its documentation can be found at \url{https://simex-lite.readthedocs.io/en/latest/}. There are several calculator and data APIs already developed in SimEx-Lite. 
+
+Calculators:
+\begin{itemize}
+    \item SourceCalculators
+    \begin{itemize}
+        \item GaussianSourceCalculator
+    \end{itemize}
+    \item PropagationCalculators
+    \begin{itemize}
+        \item WPGPropagationCalculator
+    \end{itemize}
+    \item PMICalculators (PhotonMattterInteractionCalculators)
+    \begin{itemize}
+        \item SimpleScatteringPMICalculator
+    \end{itemize}
+    \item DiffractionCalculators
+    \begin{itemize}
+        \item SingFELDiffractionCalculator
+        \item CrystFELDiffractionCalculator
+    \end{itemize}
+    \item DetectorCalculators
+    \begin{itemize}
+        \item GaussianNoiseCalculator
+    \end{itemize}
+\end{itemize}
+
+Data APIs:
+
+\begin{itemize}
+    \item WavefrontData
+    \begin{itemize}
+        \item WPGFormat
+    \end{itemize}
+    \item SampleData
+    \begin{itemize}
+        \item ASEFormat (For atomic structure formats supported by ASE)
+    \end{itemize}
+    \item PMIData (PhotonMatterInteractionData)
+    \begin{itemize}
+        \item ASEFormat (For atomic structure formats supported by ASE)
+    \end{itemize}
+    \item Diffractiondata
+        \item SingFELFormat
+        \item EMCFormat
+    \item DetectorData
+        \begin{itemize}
+            \item CXIFormat
+        \end{itemize}
+\end{itemize}
+
+A calculator can be easily constructed within SimEx-Lite. Here, we take the\\
+SingFELDiffractionCalculator as an example to explain its usage.
+
+\begin{lstlisting}[language=Python]
+from SimExLite.PMIData import PMIData, XMDYNFormat
+from SimExLite.DiffractionCalculators import SingFELDiffractionCalculator
+
+input_data = PMIData.from_file("./testFiles/PMI.h5", XMDYNFormat, "PMI_data")
+diffraction = SingFELDiffractionCalculator(
+        name="SingFELCalculator",
+        input=input_data,)
+
+print(diffraction.parameters)
+\end{lstlisting}
+
+With \verb|print(diffraction.parameters)| at the end, one can check the default values of the calculator's parameters. The output will look like this:
+
+\begin{lstlisting}
+ - Parameters object -
+random_rotation                     True                 If it's False, the orientations...
+calculate_Compton                   False                If calculate the compton...   
+slice_interval                      100                  The slice interval of the pmi...  
+slice_index_upper                   1                    The upper limit of the slice...
+pmi_start_ID                        1                    The start ID of the pmi files   
+pmi_stop_ID                         1                    The stop ID of the pmi files   
+number_of_diffraction_patterns      10                   The number of diffraction...
+pixel_size                          0.001      [meter]   The pixel size of the detector   
+pixels_x                            10                   Number of pixels in x direction   
+pixels_y                            5                    Number of pixels in y direction   
+distance                            0.13       [meter]   Sample to detector distance   
+mpi_command                         mpirun -n 2          The mpi command to run pysingfel
+\end{lstlisting}
+
+To run a simulation, as long as the corresponding backengine software is installed in the system, one can start the simulation with this function:
+\begin{lstlisting}
+output = diffraction.backengine()
+\end{lstlisting}
+
+The output is a data class mapping to the native output of the simulation software, with the \verb|output.get_data()| function, one can read the output data into memory as a python dictionary and conduct further analysis.
+
+With different calculators representing different stages of an experiment, one can create an \verb|Instrument| instance to perform start-to-end simulation. An example is provided at
+\url{https://github.com/PaNOSC-ViNYL/instrument_database/blob/spb/institutes/EuXFEL/instruments/SPB-SFX/HEAD/simex-lite/SPB-SFX.py}. One can load this defined instrument and run the defined simulation 
+
+The packages integrated in the SIMEX platform have been applied in researches reported in several peer-reviewed publications\cite{fortmann-grote2017iucrj,e2021,e2022}.
+
+% \begin{table}
+% \centering
+% % \begin{tabular}{| >{\centering\arraybackslash} m{8cm}| >{\centering\arraybackslash}m{6cm}|}
+% \begin{tabular}{| >{\bfseries} m{7cm}|m{6cm}|}
+% \hline
+% SourceCalculators & GaussianSourceCalculator \\\hline
+% PropagationCalculators & WPGPropagationCalculator \\\hline
+% PMICalculators \newline (PhotonMattterInteractionCalculators) & SimpleScatteringPMICalculator \\\hline
+% \multirow{2}{*}{DiffractionCalculators} & SingFELDiffractionCalculator \\\cline{2-2}
+%  &  CrystFELDiffractionCalculator \\\hline
+% DetectorCalculators & GaussianNoiseCalculator \\\hline
+
+% \end{tabular}
+% \caption{\label{tab:simexlite} Calculators developed in SimEx-Lite by Nov 17, 2022.}
+% \end{table}
+
+
+\subsection{Integrated simulation data workflows}
+EXtra-xwiz is a command-line tool for automated processing of the calibrated serial crystalography data. \cite{xwiz} As described in the Task 5.5 of the proposal of Work Package 5, we have created a workflow to couple SimEx-Lite and EXtra-xwiz together to optimize instrument parameters for serial femtosecond crystallography (SFX) experiments by analyzing the simulation data from SimEx-Lite with EXtra-xwiz. 
+
+As the schematic of the workflow shown in Fig.~\ref{fig:feedbackloop}, the simulation parameters and sample structure (can be any format compatible with the PDB format) are set for the CrystFEL calculator in SimEx-Lite. After running the simulation, the diffraction patterns output in CXI format is analysed by EXtra-xwiz. By making use of the metrics obtained with EXtra-xwiz, we can optimize the parameters to maximize the metric of interest in a certain condition. The optimized parameters can be a useful reference to achieve better experiment quality.
+
+\begin{figure}[h!!!]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{figures/feedbackloop.png}
+    \caption{The schematic of the coupling of simulation software and data analysis tools.}
+    \label{fig:feedbackloop}
+\end{figure}
+
+One of the workflow's use cases is to optimize the sample-to-detector distance for SFX experiments to reach the highest index rate within an acceptable range of resolution. We scanned several data points of sample-to-detector distance for the SFX simulation and analyzed the output with EXtra-xwiz to get the index rate in the corresponding condition (Fig.~\ref{fig:optSim}) {\color{blue}[The figure is currently just a place holder, the results will be updated next week.]} 
+
+\begin{figure}
+\centering
+\begin{tabular}{m{3.2in} m{3.2in}}
+\LARGE{(a)}     &   \LARGE{(b)}\\
+\includegraphics[width=0.48\textwidth]{figures/SFX_pattern.png} &
+\includegraphics[width=0.48\textwidth]{figures/optimize_curve.png} 
+\end{tabular}
+\caption 
+{\label{fig:optSim}
+(a) An example SFX pattern for the simulation, the white rectangle boxes indicate found peaks. (b) The index rate curve as a function of the sample-to-detector distance.} 
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}
