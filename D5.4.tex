@@ -276,37 +276,87 @@ documentation and testing.
 
 \section{LibPyVinyl\label{sec:libpyvinyl}}
 
-\subsection{Current status of the project and contributions}
-\label{sec:lpv_status}
 
 \subsection{Scope and purpose}
 \label{sec:lpv_scope}
-libpyvinyl, the python APIs for Virtual Neutron and x-raY Laboratory, is a python package providing a way to harmonize the user interfaces of neutron and X-ray simulation codes by defining essential base and auxiliary classes for developers of a start-to-end simulation platform. Its source code is hosted at: https://github.com/PaNOSC-ViNYL/libpyvinyl and its documentation can be found at: https://libpyvinyl.readthedocs.io/en/latest.
+libpyvinyl, the python APIs for Virtual Neutron and x-raY Laboratory, is a python package providing a way to harmonize the user interfaces of neutron and X-ray simulation codes by defining essential base and auxiliary classes for developers of a start-to-end simulation platform. 
 
 
-\subsection{Structure}
+\subsection{Current status of the project and contributions}
+\label{sec:lpv_status}
+\textit{libpyvinyl} was developed mainly by the workpackage partners from
+Eu.XFEL, ILL, and ESS, important feature requests and tests were contributed by
+ESRF. To ensure that the library can fulfill its purpose as a harmonization
+interface for various simulation backengines, it is vital that the library
+continues to be developed in a decentralized manner at various places
+representing a diversity of physics applications, simulation codes and use
+cases. While the continuation of development of individual simulation codes and
+APIs (such as McStassScript, SIMEX, or Oasys) is secured at the level of
+individual RIs, this is, at the time of writing, much more uncertain in the case
+of \textit{libpyvinyl}. It would be desirable that the development teams of
+individual simulation codes and frameworks can allocate sufficient resources to
+the maintenance and development of \textit{libpyvinyl} within their budgets.
+Dedicated resources for the  library do currently not exist
+
+\subsection{Structure of the library}
 \label{sec:lpv_structure}
+The structure of \textit{libpyvinyl} is explained in detail in Deliverable D5.3
+and in the documentation (see below in Sec~\ref{sec:lpv_repo}). We reiterate the
+main concepts here:
 
-The base classes are:
-\begin{itemize}
-    \item BaseCalculator: the interface to set parameters and perform calculation.
-    \item BaseData: the representation of the input/output data of a Calculator class.
-    \item BaseFormat: the interface to exchange data between the memory and the file on the disk in a specific format.
-\end{itemize}
+\subsubsection{Main classes}
+\label{sec:lpv_main_classes}
 
-The auxiliary classes are:
-\begin{itemize}
-    \item Parameter: the Parameter class describes a single parameter with its limits (valid/invalid range) and unit (if applicable) defined.
-    \item CalculatorParameters: a container for holding all the Parameter objects that pertain to a single Calculator.
-    \item DataCollection: a thin layer interface between the Calculator and DataClass. It aggregates the input and output into a single variable, respectively.
-    \item Instrument: a container for integrating different Calculator objects into a complete start-to-end simulation workflow.
-\end{itemize}
+\begin{description}
+\item[BaseCalculator] the interface to set parameters and perform calculation.
+\item[BaseData]   the representation of the input/output data of a Calculator class.
+\item[BaseFormat]   the interface to exchange data between the memory and the file on the disk in a specific format.
+\end{description}
 
-A simple example of the usage of libpyvinyl was created to explain its concept (\url{https://github.com/PaNOSC-ViNYL/libpyvinyl/tree/master/tests/integration/plusminus}). It shows how a simple start-to-end instrument simulation platform can be easily built up with libpyvinyl.
+\subsubsection{Auxiliary classes}
+\label{sec:lpv_aux}
+
+\begin{description}
+\item[Parameter] the Parameter class describes a single parameter with its limits (valid/invalid range) and unit (if applicable) defined.
+\item[Calculator Parameters] a container for holding all the Parameter objects that pertain to a single Calculator.
+\item[DataCollection] a thin layer interface between the Calculator and DataClass. It aggregates the input and output into a single variable, respectively.
+\item[Instrument] a container for integrating different Calculator objects into a complete start-to-end simulation workflow.
+\end{description}
+
+
+\subsection{Repository}
+\label{sec:lpv_repo}
+
+The following table lists the relevant public resources for
+\textit{libpyvinyl}'s source code, documentation site, testing status and use case.
+\begin{table}[ht]
+  \label{tab:lpv_repos}
+  \centering
+  \begin{center}
+    \caption{Relevant libpyvinyl repositories.}
+    \begin{tabular}{l p{10cm}l}
+      \hline
+      Source code repository & \url{https://github.com/PaNOSC-ViNYL/libpyvinyl} \\
+      Release snapshots & \url{https://github.com/PaNOSC-ViNYL/libpyvinyl/releases}\\
+      Documentation & \url{https://libpyvinyl.readthedocs.io}\\
+      Test status  & \url{https://github.com/PaNOSC-ViNYL/libpyvinyl/actions/workflows/ci.yml}\\
+      Usage illustration & \url{https://github.com/PaNOSC-ViNYL/libpyvinyl/tree/master/tests/integration/plusminus}\\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+The current release of \textit{libpyvinyl} is
+\href{https://github.com/PaNOSC-ViNYL/libpyvinyl/releases/tag/v1.1.2}{version
+  1.1.2}. Installation proceeds either from the cloned repository, from the
+downloaded release tarball, or via the python package index as
+\begin{lstlisting}[language=Python]
+pip install libpyvinyl
+\end{lstlisting}
 
 \section{Instrument database}
 \subsection{Scope and purpose}
-Facility users have hardly access to complete and up-to-date instrument descriptions to run sample simulations and they are difficult to manipulate for a user not expert in the specific simulation software. 
+Facility users have hardly access to complete and up--to--date instrument descriptions to run sample simulations and they are difficult to manipulate for a user not expert in the specific simulation software. 
 The libpyvinyl API offers the high level interface to harmonize the interaction with an instrument described with different simulation softwares.
 The instrument database has been designed to collect in a central place instrument descriptions created with softwares adopting the libpyvinyl API. Users are then able to access the instrument with few lines of code and run the simulation with a set of implemented samples (expandable). The instrument comes with the set of high level parameters defining the settings of the instrument that the user is supposed to be able to manipulate at the facility for the data acquisition, while all internal complexities are hidden.
 
@@ -334,14 +384,10 @@ he API to access the insturment database and make insturment descriptions availa
 
 \subsection{Installation and access}
 The repository can be cloned in local using git commands:
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 git clone  --recurse-submodules https://github.com/PaNOSC-ViNYL/instrument_database.git
-\end{verbatim}
+\end{lstlisting}
 
-%or via the Python package index pip:
-%\begin{verbatim}
-%pip install XXX
-%\end[verbatim]
 
 \subsection{Documentation}
 The documentation is self contained in the repository as Markdown file. 
@@ -353,10 +399,6 @@ A workshop dedicated to WP5 tools and prospects would be ideal to reach both exp
 
 \subsection{User base}
 Currently limited but potentially every user submitting a proposal for beam time.
-
-
-\subsection{Features}
-
 
 
 
@@ -408,9 +450,9 @@ The package has good coverage with unit tests and these are used in continuous i
 \subsubsection{Installation}
 It is possible to install the package through the Python package index pip as shown below. The package can also be installed from source by cloning the github repository. Regardless of the method, configuration is necessary to tell McStasScript where the local McStas/McXtrace installation is located.
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 pip install McStasScript
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{Documentation}
 The documentation is available at \href{https://mads-bertelsen.github.io}{https://mads-bertelsen.github.io}, where significant efforts have been made to provide comprehensive documentation. The documentation includes the purpose of the package, how to use it and tutorials on a large part of the McStas package as well as the McStas Union components. The release of the documentation along with online availability of the package was the ESS contribution to the completion of deliverable 5.2.
