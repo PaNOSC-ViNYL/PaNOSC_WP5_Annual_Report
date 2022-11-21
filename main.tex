@@ -623,9 +623,24 @@ As a part of task 5.1 and deliverable D5.1, we (CERIC-ERIC) have developed OASYS
 
 \subsection{Beyond optics - Full beamline simulations}
 
-Synergy between different simulation codes has been an important part of the developments in WP5. As OASYS simulates the X-ray spot parameters at various points along the beamline, the addition of beam-sample interaction through other codes was sought. Specifically, GAPD calculator found in Simex was used for demonstration purposes and is a part of deliverable D5.3. A prototype widget has been designed that can be seamlessly connected to the standard workflow. With this, one uses the result of X-ray propagation at the sample position and performs diffraction calculations on it. The architecture of the widget was further improved and it now allows for different calculators to be implemented in the future. A checking mechanism whether a given calculation code is properly installed on the system has also been implemented.
+Synergy between different simulation codes has been an important part of the developments in WP5. As OASYS simulates the X-ray spot parameters at various points along the beamline, the addition of beam-sample interaction through other codes was sought. Specifically, GAPD calculator found in Simex was used for demonstration purposes and is a part of deliverable D5.3. A prototype widget has been designed that can be seamlessly connected to the standard workflow. With this, one uses the result of X-ray propagation at the sample position and performs diffraction calculations on it. The architecture of the widget was further improved and it now allows for different calculators to be implemented in the future. A checking mechanism whether a given calculation code is properly installed on the system has also been implemented. The widget itself is shown in Fig. \ref{fig:widget} and an example workflow in Fig. \ref{fig:workflow}.
 
-TODO: 1 FIGURE
+\begin{figure}[htb]
+    \centering
+    \setkeys{Gin}{width=\linewidth}
+    \begin{subfigure}{0.35\textwidth}
+        \includegraphics{figures/simexOasysWidget2.png}
+        \caption{}
+        \label{fig:widget}
+    \end{subfigure}
+    \hfil
+    \begin{subfigure}{0.55\textwidth}
+        \includegraphics{figures/simexOasysWidget.png}
+        \caption{}
+        \label{fig:workflow}
+    \end{subfigure}% trailing space between `subfigure` environments  had to be removed
+    \caption{(a) Widget for running SimEx calculation directly from Oasys. (b) Example workflow where a beamline simulation result is used as an input to SimEx GAPD calculator.}
+\end{figure}
 
 \subsection{OASYS PaNOSC use cases}
 \label{subsec:panosc_use_cases}
@@ -641,7 +656,7 @@ A list of use cases using OASYS, submitted to PaNOSC website is provided in Tabl
 16 & \href{https://www.panosc.eu/use-cases/panosc-use-case-16-coherent-mode-decomposition-of-synchrotron-emission-by-comsyl/}{Coherent mode decomposition of synchrotron emission by COMSYL} \\
 31 & \href{https://www.panosc.eu/use-cases/use-case-31-seamless-connection-of-jupyter-notebooks-and-gui-applications-for-e-learning-purposes/}{Seamless connection of Jupyter notebooks and GUI applications for e-learning purposes}
 \end{tabular}
-\caption{\label{tab:use_cases} Links to PaNOSC use cases linked to OASYS.}
+\caption{\label{tab:use_cases} Links to PaNOSC use cases linked to OASYS. All use cases are published on \url{www.panosc.eu}.}
 \end{table}
 
 \section{Contribution from EuXFEL}
