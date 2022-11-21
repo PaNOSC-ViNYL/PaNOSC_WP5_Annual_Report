@@ -10,6 +10,7 @@
 \usepackage{multirow}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{float} 
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -692,11 +693,13 @@ Data APIs:
     \end{itemize}
     \item PMIData (PhotonMatterInteractionData)
     \begin{itemize}
-        \item ASEFormat (For atomic structure formats supported by ASE)
+        \item XMDYNFormat
     \end{itemize}
     \item Diffractiondata
-        \item SingFELFormat
-        \item EMCFormat
+        \begin{itemize}
+            \item SingFELFormat
+            \item EMCFormat
+        \end{itemize}
     \item DetectorData
         \begin{itemize}
             \item CXIFormat
@@ -744,7 +747,7 @@ output = diffraction.backengine()
 The output is a data class mapping to the native output of the simulation software, with the \verb|output.get_data()| function, one can read the output data into memory as a python dictionary and conduct further analysis.
 
 With different calculators representing different stages of an experiment, one can create an \verb|Instrument| instance to perform start-to-end simulation. An example is provided at
-\url{https://github.com/PaNOSC-ViNYL/instrument_database/blob/spb/institutes/EuXFEL/instruments/SPB-SFX/HEAD/simex-lite/SPB-SFX.py}. One can load this defined instrument and run the defined simulation 
+\url{https://github.com/PaNOSC-ViNYL/instrument_database/blob/spb/institutes/EuXFEL/instruments/SPB-SFX/HEAD/simex-lite/SPB-SFX.py}. One can load this defined instrument and run the defined simulation.
 
 The packages integrated in the SIMEX platform have been applied in researches reported in several peer-reviewed publications\cite{fortmann-grote2017iucrj,e2021,e2022}.
 
@@ -766,7 +769,7 @@ The packages integrated in the SIMEX platform have been applied in researches re
 
 
 \section{Integrated simulation data workflows\label{sec:simdata}}
-EXtra-xwiz is a command-line tool for automated processing of the calibrated serial crystalography data. \cite{xwiz} As described in the Task 5.5 of the proposal of Work Package 5, we have created a workflow to couple SimEx-Lite and EXtra-xwiz together to optimize instrument parameters for serial femtosecond crystallography (SFX) experiments by analyzing the simulation data from SimEx-Lite with EXtra-xwiz. 
+EXtra-xwiz is a command-line tool for automated processing of the calibrated serial crystalography data\cite{xwiz}. As described in the Task 5.5 of the proposal of Work Package 5, we have created a workflow to couple SimEx-Lite and EXtra-xwiz together to optimize instrument parameters for serial femtosecond crystallography (SFX) experiments by analyzing the simulation data from SimEx-Lite with EXtra-xwiz. 
 
 As the schematic of the workflow shown in Fig.~\ref{fig:feedbackloop}, the simulation parameters and sample structure (can be any format compatible with the PDB format) are set for the CrystFEL calculator in SimEx-Lite. After running the simulation, the diffraction patterns output in CXI format is analysed by EXtra-xwiz. By making use of the metrics obtained with EXtra-xwiz, we can optimize the parameters to maximize the metric of interest in a certain condition. The optimized parameters can be a useful reference to achieve better experiment quality.
 
@@ -776,20 +779,24 @@ As the schematic of the workflow shown in Fig.~\ref{fig:feedbackloop}, the simul
     \caption{The schematic of the coupling of simulation software and data analysis tools.}
     \label{fig:feedbackloop}
 \end{figure}
+One of the workflow's use cases is to optimize the sample-to-detector distance for SFX experiments to reach the highest index rate within an acceptable range of resolution. We scanned several data points of sample-to-detector distance for the SFX simulation and analyzed the output with EXtra-xwiz to get the index rate in the corresponding condition (Fig.~\ref{fig:optSim}) With different X-ray energy densities, the sample-to-detector distance needed to reach the highest index rate is different. One can then optimize these parameters based on the exact need.
+% {\color{blue}[The figure is currently just a place holder, the results will be updated next week.]} 
 
-One of the workflow's use cases is to optimize the sample-to-detector distance for SFX experiments to reach the highest index rate within an acceptable range of resolution. We scanned several data points of sample-to-detector distance for the SFX simulation and analyzed the output with EXtra-xwiz to get the index rate in the corresponding condition (Fig.~\ref{fig:optSim}) {\color{blue}[The figure is currently just a place holder, the results will be updated next week.]} 
-
-\begin{figure}
+\begin{figure}[H]
 \centering
-\begin{tabular}{m{3.2in} m{3.2in}}
-\LARGE{(a)}     &   \LARGE{(b)}\\
-\includegraphics[width=0.48\textwidth]{figures/SFX_pattern.png} &
-\includegraphics[width=0.48\textwidth]{figures/optimize_curve.png} 
-\end{tabular}
+\begin{flushleft}
+\LARGE{(a)}
+\end{flushleft}
+\includegraphics[width=0.6\textwidth]{figures/SFX_pattern.png} \\
+\begin{flushleft}
+\LARGE{(b)}
+\end{flushleft}
+\includegraphics[width=0.6\textwidth]{figures/index_rate.pdf} 
 \caption 
 {\label{fig:optSim}
-(a) An example SFX pattern for the simulation, the white rectangle boxes indicate found peaks. (b) The index rate curve as a function of the sample-to-detector distance.} 
+(a) An example SFX pattern for the simulation, the white rectangle boxes indicate found peaks. (b) The index rate curve as a function of the sample-to-detector distance with different X-ray energy densities.} 
 \end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{unsrt}
