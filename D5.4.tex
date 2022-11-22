@@ -10,7 +10,11 @@
 \usepackage{multirow}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage{float} 
+\usepackage{float}
+\usepackage[style=numeric-comp,hyperref=true,maxnames=6,sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -653,17 +657,24 @@ A list of use cases using OASYS, submitted to PaNOSC website is provided in Tabl
 
 \section{SimEx-Lite\label{sec:simex-lite}}
 
-SimEx-Lite is the core package of the SIMEX platform providing the calculator interfaces and data APIs. It is hosted at \url{https://github.com/PaNOSC-ViNYL/SimEx-Lite}, and its documentation can be found at \url{https://simex-lite.readthedocs.io/en/latest/}. There are several calculator and data APIs already developed in SimEx-Lite. 
+SIMEX \cite{fortmann-grote2016} is a platform for simulation of experiments at advanced laser and X-ray light sources. SimEx-Lite is the core package of the SIMEX platform funded by the PaNOSC project to provide the calculator interfaces and data APIs for start-to-end simulation. By exposing all aspects of typical experiments at light source
+infrastructures from the source to the detector, it allows to build a workflow to simulate behaviours of an X-ray instrument.  
+
+\subsection{Repository}
+SimEx-Lite is hosted at \url{https://github.com/PaNOSC-ViNYL/SimEx-Lite}, and its documentation can be found at \url{https://simex-lite.readthedocs.io/en/latest/}. The current release of SimEx-Lite is \href{https://pypi.org/project/SimEx-Lite/}{version-1.0.0}.
+
+\subsection{Modules}
+There are several calculator and data APIs already developed in SimEx-Lite. 
 
 Calculators:
 \begin{itemize}
     \item SourceCalculators
     \begin{itemize}
-        \item GaussianSourceCalculator
+        \item GaussianSourceCalculator \cite{samoylova2016}
     \end{itemize}
     \item PropagationCalculators
     \begin{itemize}
-        \item WPGPropagationCalculator
+        \item WPGPropagationCalculator \cite{samoylova2016}
     \end{itemize}
     \item PMICalculators (PhotonMattterInteractionCalculators)
     \begin{itemize}
@@ -671,12 +682,12 @@ Calculators:
     \end{itemize}
     \item DiffractionCalculators
     \begin{itemize}
-        \item SingFELDiffractionCalculator
-        \item CrystFELDiffractionCalculator
+        \item SingFELDiffractionCalculator \cite{pysingfel}
+        \item CrystFELDiffractionCalculator \cite{white2012jac}
     \end{itemize}
     \item DetectorCalculators
     \begin{itemize}
-        \item GaussianNoiseCalculator
+        \item GaussianNoiseCalculator \cite{e2022}
     \end{itemize}
 \end{itemize}
 
@@ -706,6 +717,7 @@ Data APIs:
         \end{itemize}
 \end{itemize}
 
+\subsection{Usage}
 A calculator can be easily constructed within SimEx-Lite. Here, we take the\\
 SingFELDiffractionCalculator as an example to explain its usage.
 
@@ -799,7 +811,9 @@ One of the workflow's use cases is to optimize the sample-to-detector distance f
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\bibliographystyle{unsrt}
-\bibliography{references}
+% \bibliographystyle{unsrt}
+% \bibliography{references}
+\printbibliography
+
 
 \end{document}

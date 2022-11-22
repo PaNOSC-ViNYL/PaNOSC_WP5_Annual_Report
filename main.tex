@@ -553,11 +553,12 @@ Several successful calculation packages exist and are actively maintained by the
   \label{tab:repos}
   \centering
   \begin{center}
-    \caption{Relevant OASYS repositories.}
+    \caption{Relevant OASYS repositories. The current release of OASYS1-PaNOSC is \href{https://pypi.org/project/OASYS1-PaNOSC/0.3.2/}{v0.3.2} and of OASYS1-oasyswiser \href{https://pypi.org/project/OASYS1-oasyswiser/0.3.22/}{v0.3.22}.}
     \begin{tabular}{l p{10cm}l}
       \hline
       OASYS Panosc toolbox code & \url{https://github.com/PaNOSC-ViNYL/OASYS1-PaNOSC} \\
-      Wiser repository & \url{https://github.com/oasys-elettra-kit/OASYS1-Wiser} \\
+      Wiser (Library) repository & \url{https://github.com/oasys-elettra-kit/WISEr} \\
+      OasysWiser (GUI) repository & \url{https://github.com/oasys-elettra-kit/OASYS1-Wiser} \\
       OASYS local Docker container & \url{https://gitlab.elettra.eu/panosc/ceric/oasys-local-docker} \\
       OASYS Jupyter Docker container & \url{https://gitlab.elettra.eu/panosc/jupyter-desktop-oasys} \\
       Dockerhub release & \url{https://hub.docker.com/r/ceric/panosc-oasys-local}\\
@@ -572,11 +573,11 @@ Several successful calculation packages exist and are actively maintained by the
 
 Wiser is a new package for wavefront propagation calculations based on Python implementation of WISE calculation code which stemmed from and is still maintained by Elettra Synchrotron. It is targeted at simulating the optical performance of X-ray mirrors. Propagation is done using Huygens-Fresnel integratal and allows for simultaneous 2-dimensional calculations of both figure errors (profiles) and roughness (statistical). Several optical elements have been implemented so far: plane mirror, elliptic mirror, spherical mirror, slit, detector, grating.
 
-OASYS implementation consists of several abstraction layers of which the user interacts only with the top-most one - OASYS1-Wiser (available for installation on PyPI and through internal OASYS add-on manager). The back-end is a numerically optimized (able to use multi-core CPU processing) stand-alone Python library \emph{Wiser} which then interacts with \emph{WOFRY} package which strives to be a generic high-level abstraction of wavefront propagation workflows in OASYS. 
+OASYS implementation consists of several abstraction layers of which the user interacts only with the top-most one - OASYS1-oasyswiser (available for installation on PyPI and through internal OASYS add-on manager). The back-end is a numerically optimized (able to use multi-core CPU processing) stand-alone Python library \emph{Wiser} which then interacts with \emph{WOFRY} package which strives to be a generic high-level abstraction of wavefront propagation workflows in OASYS. 
 
 The development was done in three stages, it first focused on numerical optimization of Wiser. Since solving the Huygens-Fresnel integral is very expensive, this was a crucial step in usability and accessibility of the code. A few different optimization methods have been used. Using \emph{numba} Python library for just-in-time compiling of calculation kernel, a speed-up on the order of 10-100x has been reached. Afterwards, several new optical elements had to be implemented and a testing phase was conducted. When numerical consistency has been confirmed, work started on the GUI part. At present, all the elements beside the grating are available and ready-to-use as widgets in OASYS.
 
-The package has been presented at the SPIE 2020 conference (  M. Manfredda, A. Hafner, S. Gerusina, N. Mahne, A. Simoncig, M. Zangrando, L. Raimondi, "WISER wavefront propagation simulation code: advances and applications," Proc. SPIE 11493, Advances in Computational Methods for X-Ray Optics V, 114930B (16 September 2020); https://doi.org/10.1117/12.2568574 ) and since then used in several applications (see Section \ref{subsec:panosc_use_cases}).
+The package has been presented at the SPIE 2020 conference \cite{manfredda2020} and since then used in several applications (see Section \ref{subsec:panosc_use_cases}).
 
 \subsection{COMSYL}
 
