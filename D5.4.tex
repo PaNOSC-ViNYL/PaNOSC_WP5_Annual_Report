@@ -270,16 +270,20 @@ femtosecond crystallography. This is the final Deliverable.
 
 \section{Introduction}
 
-Arguably the main purpose of the PaNOSC WP 5 simulation project have been to
-harmonize the user interface for simulations of X-ray and neutron beamlines. It
-was decided that a Python interface suitable for Jupyter Notebooks was the best
-solution. In the following sections, we describe each software package that was
-developed under the umbrella of work package 5. Each section gives a description
-of the package's purpose and usage area, a discussion of important developments
-with WP5 contributions and it lists the packages resources for source code,
+The main purposes of the PaNOSC work package 5 are to
+harmonize the user interface for simulations of X-ray and neutron beamlines and
+to enhance the interoperability of simulation codes using community
+defined data formats and metadata standards. With the latest releases of
+simulation code projects and simulation infrastructure libraries, these
+ambitious
+goals have now been accomplished. The present report aims at presenting a
+comprehensive
+overview on the various software solutions and gives references and pointers to
+the respective resources for source code,
 documentation and testing.
 
-\section{LibPyVinyl\label{sec:libpyvinyl}}
+\section{libpyvinyl}
+\label{sec:libpyvinyl}
 
 
 \subsection{Scope and purpose}
@@ -289,23 +293,23 @@ libpyvinyl, the python APIs for Virtual Neutron and x-raY Laboratory, is a pytho
 
 \subsection{Current status of the project and contributions}
 \label{sec:lpv_status}
-\textit{libpyvinyl} was developed mainly by the workpackage partners from
+libpyvinyl was developed mainly by the workpackage partners from
 Eu.XFEL, ILL, and ESS, important feature requests and tests were contributed by
 ESRF. To ensure that the library can fulfill its purpose as a harmonization
 interface for various simulation backengines, it is vital that the library
 continues to be developed in a decentralized manner at various places
 representing a diversity of physics applications, simulation codes and use
 cases. While the continuation of development of individual simulation codes and
-APIs (such as McStassScript, SIMEX, or Oasys) is secured at the level of
+APIs (such as McStasScript, SIMEX, or Oasys) is secured at the level of
 individual RIs, this is, at the time of writing, much more uncertain in the case
-of \textit{libpyvinyl}. It would be desirable that the development teams of
+of libpyvinyl. It would be desirable that the development teams of
 individual simulation codes and frameworks can allocate sufficient resources to
-the maintenance and development of \textit{libpyvinyl} within their budgets.
+the maintenance and development of libpyvinyl within their budgets.
 Dedicated resources for the  library do currently not exist
 
 \subsection{Structure of the library}
 \label{sec:lpv_structure}
-The structure of \textit{libpyvinyl} is explained in detail in Deliverable D5.3
+The structure of libpyvinyl is explained in detail in Deliverable D5.3
 and in the documentation (see below in Sec~\ref{sec:lpv_repo}). We reiterate the
 main concepts here:
 
@@ -333,7 +337,7 @@ main concepts here:
 \label{sec:lpv_repo}
 
 The following table lists the relevant public resources for
-\textit{libpyvinyl}'s source code, documentation site, testing status and use case.
+libpyvinyl's source code, documentation site, testing status and use case.
 \begin{table}[ht]
   \label{tab:lpv_repos}
   \centering
@@ -351,9 +355,8 @@ The following table lists the relevant public resources for
   \end{center}
 \end{table}
 
-The current release of \textit{libpyvinyl} is
-\href{https://github.com/PaNOSC-ViNYL/libpyvinyl/releases/tag/v1.1.2}{version
-  1.1.2}. Installation proceeds either from the cloned repository, from the
+The current release of libpyvinyl is
+\href{https://github.com/PaNOSC-ViNYL/libpyvinyl/releases/tag/v1.1.2}{version 1.1.2}. Installation proceeds either from the cloned repository, from the
 downloaded release tarball, or via the python package index as
 \begin{lstlisting}[language=Python]
 pip install libpyvinyl
@@ -409,12 +412,11 @@ Currently limited but potentially every user submitting a proposal for beam time
 
 \section{McStasScript\label{sec:mcstasscript}}
 
-For neutron scattering, the \href{https://www.mcstas.org}{McStas
-  package} is the standard tool for instrument simulations, yet it has a
+For neutron scattering, the \href{https://www.mcstas.org}{McStas package} is the standard tool for instrument simulations, yet it has a
 specialized user interface built on the C programming language. McStas has a
 sister project called McXtrace that simulates X-ray instrumentation.
 The McStasScript Python API that allows
-nearly full access to McStas/McXtrace features through an elegant Python
+nearly full access to McStas/\textit{McXtrace} features through an elegant Python
 interface was mainly developed at the European Spallation Source (ESS). The main
 
 
@@ -425,7 +427,7 @@ McStasScript thus provides a third way of writing McStas instruments, where ever
 
 McStasScript was developed in parallel with the simulation base package
 libpyvinyl in order to ensure a harmonization of the different simulation
-package APIs. Libpyvinyl provides base classes from which one can build
+package APIs. libpyvinyl provides base classes from which one can build
 simulation packages, and these simulations packages will thus follow a similar
 logic and share the most important method names. The libpyvinyl package is in
 this way the answer to the harmonization part of task 5.1, and McStasScript is
@@ -453,7 +455,7 @@ McStasScript-notebooks &  \href{https://github.com/PaNOSC-ViNYL/McStasScript-not
 The package has good coverage with unit tests and these are used in continuous integration (CI). In addition, integration tests are available, as these do Monte Carlo simulations and require a local McStas installation, these are not included in CI.
 
 \subsubsection{Installation}
-It is possible to install the package through the Python package index pip as shown below. The package can also be installed from source by cloning the github repository. Regardless of the method, configuration is necessary to tell McStasScript where the local McStas/McXtrace installation is located.
+It is possible to install the package through the Python package index pip as shown below. The package can also be installed from source by cloning the github repository. Regardless of the method, configuration is necessary to tell McStasScript where the local McStas/\textit{McXtrace} installation is located.
 
 \begin{lstlisting}[language=Python]
 pip install McStasScript
@@ -484,13 +486,13 @@ ESS-ILL User meeting 2022 & Poster \\
 \end{table}
 
 \subsubsection{User base}
-It is difficult to judge the size of the current McStasScript user base as the download statistics include downloads of the package made through continuous integration, bots that mirror the package and so forth. There have been days with more than 300 downloads of the package, but it has not been possible to find a total number of downloads across all versions. Users provide issues to the github project, pull requests are being submitted and support requests are regularly received by the author over e-mail. It can be concluded that the package is reaching some level of adoption within the McStas/McXtrace community. Known users are located at ILL, SNS, KU, DTU, MLZ, TUDelft and have even been used to design X-ray optics for space based telescope.
+It is difficult to judge the size of the current McStasScript user base as the download statistics include downloads of the package made through continuous integration, bots that mirror the package and so forth. There have been days with more than 300 downloads of the package, but it has not been possible to find a total number of downloads across all versions. Users provide issues to the github project, pull requests are being submitted and support requests are regularly received by the author over e-mail. It can be concluded that the package is reaching some level of adoption within the McStas/\textit{McXtrace} community. Known users are located at ILL, SNS, KU, DTU, MLZ, TUDelft and have even been used to design X-ray optics for space based telescope.
 
 \subsection{McStasScript features}
 This section aims to provide an overview of the feature set of McStasScript.
 
 \subsubsection{Write instrument}
-An instrument is made by creating an instrument object, and this instrument object can then have components added. These are a sequence of smaller codes that describe the beamline, and are each represented by a file on the users disk. McStasScript parses these files to internalize information on their parameters and units. It is possible to add components to any point in the sequence of components, but it is most common to place new components at the end. The instrument object inherits from the LibPyVinyl calculator class in order to adhere to the standardized user interface created by WP5.
+An instrument is made by creating an instrument object, and this instrument object can then have components added. These are a sequence of smaller codes that describe the beamline, and are each represented by a file on the users disk. McStasScript parses these files to internalize information on their parameters and units. It is possible to add components to any point in the sequence of components, but it is most common to place new components at the end. The instrument object inherits from the libpyvinyl calculator class in order to adhere to the standardized user interface created by WP5.
 
 \subsubsection{Parameters}
 It is also possible to add parameters to an instrument, these can be changed easily between runs. When changing components, McStas requires the underlying C code to be recompiled, but this can be avoided when only changing parameters. McStasScript has yet to implement code that avoids compiling when unnecessary, this is still the users responsibility.
@@ -508,7 +510,7 @@ McStasScript contains a number of help features ranging from simple text overvie
 \end{figure}
 
 \subsubsection{Run simulation}
-The simulation can be executed from the Python environment, this is achieved with a system call using the subprocess module. The user can use the same controls available on the command line tools, such as setting the number of rays, location of data output, enabling gravity and selecting how many CPU cores will be used. The actual run method is called backengine to conform the LibPyVinyl standard.
+The simulation can be executed from the Python environment, this is achieved with a system call using the subprocess module. The user can use the same controls available on the command line tools, such as setting the number of rays, location of data output, enabling gravity and selecting how many CPU cores will be used. The actual run method is called backengine to conform the libpyvinyl standard.
 
 \subsubsection{Return of data}
 Running a simulation returns data as a list of Python objects corresponding to each monitor in the instrument. These contain metadata such as the used parameters and information about the monitor as well as the actual data in nunmpy arrays. The objects also contain preferences on how this object should be plotted so the plotting tools in McStasScript can use appropriate settings when plotting the included data. 
