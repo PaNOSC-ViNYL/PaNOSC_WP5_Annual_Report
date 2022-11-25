@@ -540,12 +540,6 @@ OASYS (OrAnge SYnchrotron Suite) is an open source environment for modelling X-r
 
 Several successful calculation packages exist and are actively maintained by the community. Among the most popular are \emph{SHADOW} for ray-tracing simulations and \emph{SRW} for wavefront propagation. During the PaNOSC project, we have addressed several different topics. This chapter provides an overview of all the development. All PaNOSC-specific widgets can be installed through OASYS1-PaNOSC (shown in Fig. \ref{fig:toolbox} package hosted on PyPI and available through the internal add-on manager. All contributions to the OASYS part described below come from CERIC-ERIC and ESRF.
 
-As a part of task 5.1 and deliverable D5.1, we developed OASYS support for
-openPMD format and contributed to the standard for ray-tracing simulations. Two
-specific widgets, one for reading and one for writing openPMD files, are a part
-of the PaNOSC toolbox in Oasys (Fig. \ref{fig:toolbox}).
-
-
 \begin{figure}[htb]
     \centering
     \setkeys{Gin}{width=\linewidth}
@@ -567,11 +561,12 @@ of the PaNOSC toolbox in Oasys (Fig. \ref{fig:toolbox}).
   \label{tab:repos}
   \centering
   \begin{center}
-    \caption{Relevant OASYS repositories.}
+    \caption{Relevant OASYS repositories. The current release of OASYS1-PaNOSC is \href{https://pypi.org/project/OASYS1-PaNOSC/0.3.2/}{v0.3.2} and of OASYS1-oasyswiser \href{https://pypi.org/project/OASYS1-oasyswiser/0.3.22/}{v0.3.22}.}
     \begin{tabular}{l p{10cm}l}
       \hline
       OASYS Panosc toolbox code & \url{https://github.com/PaNOSC-ViNYL/OASYS1-PaNOSC} \\
-      Wiser repository & \url{https://github.com/oasys-elettra-kit/OASYS1-Wiser} \\
+      Wiser (Library) repository & \url{https://github.com/oasys-elettra-kit/WISEr} \\
+      OasysWiser (GUI) repository & \url{https://github.com/oasys-elettra-kit/OASYS1-Wiser} \\
       OASYS local Docker container & \url{https://gitlab.elettra.eu/panosc/ceric/oasys-local-docker} \\
       OASYS Jupyter Docker container & \url{https://gitlab.elettra.eu/panosc/jupyter-desktop-oasys} \\
       Dockerhub release & \url{https://hub.docker.com/r/ceric/panosc-oasys-local}\\
@@ -586,15 +581,17 @@ of the PaNOSC toolbox in Oasys (Fig. \ref{fig:toolbox}).
 
 Wiser is a new package for wavefront propagation calculations based on Python implementation of WISE calculation code which stemmed from and is still maintained by Elettra Synchrotron. It is targeted at simulating the optical performance of X-ray mirrors. Propagation is done using Huygens-Fresnel integratal and allows for simultaneous 2-dimensional calculations of both figure errors (profiles) and roughness (statistical). Several optical elements have been implemented so far: plane mirror, elliptic mirror, spherical mirror, slit, detector, grating.
 
-OASYS implementation consists of several abstraction layers of which the user interacts only with the top-most one - OASYS1-Wiser (available for installation on PyPI and through internal OASYS add-on manager). The back-end is a numerically optimized (able to use multi-core CPU processing) stand-alone Python library \emph{Wiser} which then interacts with \emph{WOFRY} package which strives to be a generic high-level abstraction of wavefront propagation workflows in OASYS. 
+OASYS implementation consists of several abstraction layers of which the user interacts only with the top-most one - OASYS1-oasyswiser (available for installation on PyPI and through internal OASYS add-on manager). The back-end is a numerically optimized (able to use multi-core CPU processing) stand-alone Python library \emph{Wiser} which then interacts with \emph{WOFRY} package which strives to be a generic high-level abstraction of wavefront propagation workflows in OASYS. 
 
 The development was done in three stages, it first focused on numerical optimization of Wiser. Since solving the Huygens-Fresnel integral is very expensive, this was a crucial step in usability and accessibility of the code. A few different optimization methods have been used. Using \emph{numba} Python library for just-in-time compiling of calculation kernel, a speed-up on the order of 10-100x has been reached. Afterwards, several new optical elements had to be implemented and a testing phase was conducted. When numerical consistency has been confirmed, work started on the GUI part. At present, all the elements beside the grating are available and ready-to-use as widgets in OASYS.
 
-The package has been presented at the SPIE 2020 conference (  M. Manfredda, A. Hafner, S. Gerusina, N. Mahne, A. Simoncig, M. Zangrando, L. Raimondi, "WISER wavefront propagation simulation code: advances and applications," Proc. SPIE 11493, Advances in Computational Methods for X-Ray Optics V, 114930B (16 September 2020); https://doi.org/10.1117/12.2568574 ) and since then used in several applications (see Section \ref{subsec:panosc_use_cases}).
+The package has been presented at the SPIE 2020 conference \cite{manfredda2020} and since then used in several applications (see Section \ref{subsec:panosc_use_cases}).
 
 \subsection{COMSYL}
 
-TODO: Manuel, please write a short paragraph!
+ COMSYL (COherent Modes for SYnchrotron Light) is a software package to perform numerically the coherent mode decomposition of undulator radiation in a storage ring \cite{Glass2017}. COMSYL requires the use of high-performance computer resources. COMSYL is used for beamline modelling at the ESRF-EBS. Several tasks that directly concern COMSYL have been carried out in the context of PaNOSC. COMSYL has evolved from the old OAR task manager to the new SLURM at the ESRF clusters. The OASYS add-on has also been updated. But, with no doubts, the most important and useful development concerns the development of a fast and lightweight tool for partially coherent beamline simulations \cite{SanchezdelRio2022} based on the same concepts of COMSYL, but fully implemented in python. This method has been thoroughly benchmarked against COMSYL and other tools used to simulate partially coherent x-rays \cite{SanchezdelRio2022}, and it is fully integrated in the OASYS package.
+
+Not directly linked with COMSYL, but in the heart of OASYS, it is important to mention that the ray tracing engine SHADOW and the corresponding add-on ShadowOui have been upgraded to allow simulations for monochromators using crystals with high d-spacing \cite{Yu2022}, which is of particular interest for storages-rings producing soft X-rays.  
 
 \subsection{Remote usage}
 
@@ -631,11 +628,30 @@ Running programs with rich GUIs remotely is non-trivial. One option is to use re
 
 Building on the solution described in Sec. \ref{sec:docker}, a Docker container has been prepared for the purpose of E-learning. The said Docker container has been successfully used during the PaNOSC summer school organized by the training workpackage, WP8. It was further enriched with all necessary software for the course: Crispy, McStas and OASYS. Students could then seamlessly access all the required software without any installation on local machines and sharing the remote computing resources.
 
+\subsection{openPMD}
+
+As a part of task 5.1 and deliverable D5.1, we (CERIC-ERIC) have developed OASYS support for openPMD format and contributed to the standard for ray-tracing simulations. Two specific widgets, one for reading and one for writing openPMD files, are a part of the PaNOSC toolbox (Fig. \ref{fig:toolbox}).
+
 \subsection{Beyond optics - Full beamline simulations}
 
-Synergy between different simulation codes has been an important part of the developments in WP5. As OASYS simulates the X-ray spot parameters at various points along the beamline, the addition of beam-sample interaction through other codes was sought. Specifically, GAPD calculator found in Simex was used for demonstration purposes and is a part of deliverable D5.3. A prototype widget has been designed that can be seamlessly connected to the standard workflow. With this, one uses the result of X-ray propagation at the sample position and performs diffraction calculations on it. The architecture of the widget was further improved and it now allows for different calculators to be implemented in the future. A checking mechanism whether a given calculation code is properly installed on the system has also been implemented.
+Synergy between different simulation codes has been an important part of the developments in WP5. As OASYS simulates the X-ray spot parameters at various points along the beamline, the addition of beam-sample interaction through other codes was sought. Specifically, GAPD calculator found in Simex was used for demonstration purposes and is a part of deliverable D5.3. A prototype widget has been designed that can be seamlessly connected to the standard workflow. With this, one uses the result of X-ray propagation at the sample position and performs diffraction calculations on it. The architecture of the widget was further improved and it now allows for different calculators to be implemented in the future. A checking mechanism whether a given calculation code is properly installed on the system has also been implemented. The widget itself is shown in Fig. \ref{fig:widget1} and an example workflow in Fig. \ref{fig:workflow}.
 
-TODO: 1 FIGURE
+\begin{figure}[htb]
+    \centering
+    \setkeys{Gin}{width=\linewidth}
+    \begin{subfigure}{0.35\textwidth}
+        \includegraphics{figures/simexOasysWidget2.png}
+        \caption{}
+        \label{fig:widget1}
+    \end{subfigure}
+    \hfil
+    \begin{subfigure}{0.55\textwidth}
+        \includegraphics{figures/simexOasysWidget.png}
+        \caption{}
+        \label{fig:workflow}
+    \end{subfigure}% trailing space between `subfigure` environments  had to be removed
+    \caption{(a) Widget for running SimEx calculation directly from Oasys. (b) Example workflow where a beamline simulation result is used as an input to SimEx GAPD calculator.}
+\end{figure}
 
 \subsection{OASYS PaNOSC use cases}
 \label{subsec:panosc_use_cases}
@@ -651,7 +667,7 @@ A list of use cases using OASYS, submitted to PaNOSC website is provided in Tabl
 16 & \href{https://www.panosc.eu/use-cases/panosc-use-case-16-coherent-mode-decomposition-of-synchrotron-emission-by-comsyl/}{Coherent mode decomposition of synchrotron emission by COMSYL} \\
 31 & \href{https://www.panosc.eu/use-cases/use-case-31-seamless-connection-of-jupyter-notebooks-and-gui-applications-for-e-learning-purposes/}{Seamless connection of Jupyter notebooks and GUI applications for e-learning purposes}
 \end{tabular}
-\caption{\label{tab:use_cases} Links to PaNOSC use cases linked to OASYS.}
+\caption{\label{tab:use_cases} Links to PaNOSC use cases linked to OASYS. All use cases are published on \url{www.panosc.eu}.}
 \end{table}
 
 

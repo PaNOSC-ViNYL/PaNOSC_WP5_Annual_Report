@@ -11,6 +11,24 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
+\usepackage{tikz}
+\usetikzlibrary {graphs,graphdrawing}
+\usegdlibrary{layered}
+\usegdlibrary{trees}
+
+\usetikzlibrary{backgrounds, fit}
+
+\tikzset{
+  invisible/.style={opacity=0},
+  visible on/.style={alt=#1{}{invisible}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+\tikzset{title/.style={fill=white,inner sep=0pt,font={\scshape},anchor=center,yshift=1pt}}
+
+
+
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -581,7 +599,9 @@ The package has been presented at the SPIE 2020 conference \cite{manfredda2020} 
 
 \subsection{COMSYL}
 
-TODO: Manuel, please write a short paragraph!
+ COMSYL (COherent Modes for SYnchrotron Light) is a software package to perform numerically the coherent mode decomposition of undulator radiation in a storage ring \cite{Glass2017}. COMSYL requires the use of high-performance computer resources. COMSYL is used for beamline modelling at the ESRF-EBS. Several tasks that directly concern COMSYL have been carried out in the context of PaNOSC. COMSYL has evolved from the old OAR task manager to the new SLURM at the ESRF clusters. The OASYS add-on has also been updated. But, with no doubts, the most important and useful development concerns the development of a fast and lightweight tool for partially coherent beamline simulations \cite{SanchezdelRio2022} based on the same concepts of COMSYL, but fully implemented in python. This method has been thoroughly benchmarked against COMSYL and other tools used to simulate partially coherent x-rays \cite{SanchezdelRio2022}, and it is fully integrated in the OASYS package.
+
+Not directly linked with COMSYL, but in the heart of OASYS, it is important to mention that the ray tracing engine SHADOW and the corresponding add-on ShadowOui have been upgraded to allow simulations for monochromators using crystals with high d-spacing \cite{Yu2022}, which is of particular interest for storages-rings producing soft X-rays.  
 
 \subsection{Remote usage}
 
@@ -824,6 +844,265 @@ One of the workflow's use cases is to optimize the sample-to-detector distance f
 {\label{fig:optSim}
 (a) An example SFX pattern for the simulation, the white rectangle boxes indicate found peaks. (b) The index rate curve as a function of the sample-to-detector distance.} 
 \end{figure}
+
+\clearpage
+\section{Towards Digital Twin}
+\subsection{Goal}
+Interface Mcstas simulations of an instrument from a research facility to the data acquisition system in order to offer to users the same experience as during their experiments. Users are then able to prepare proposals, preparing in advance their experiments optimizing the instrument settings to maximize their scientific outcome and reduce beam time needed.
+
+\subsection{Current status}
+The project is still in an advanced prototype state.
+A new tab dedicated to specific settings for the simulation mode has been added to Nomad (see Fig.~\ref{fig:Nomad_sim_settings}.
+
+The data acquisition is performed as for the real data and results are visualised and treated accordingly. 
+In Fig.~\ref{fig:Nomad_ThALES_vanadium_scan} a scan with the triple axis spectrometer ThALES is performed using a vanadium sample.
+
+\subsection{Repository}
+Currently in internal ILL gitlab, will be migrated to the PANOSC github repository in the next days.
+
+Everything is released under the GPLv3 licence.
+
+\subsection{Structure}
+\begin{figure}[tbh]
+\includegraphics[width=\textwidth]{figures/communication.dot.pdf}
+\label{fig:DT_comm}
+\caption{Digital Twin Communication Diagram.}
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=0.5\textwidth]{figures/McStas-settings.png}
+\caption{ILL's Nomad simulation settings tab}
+\label{fig:Nomad_sim_settings}
+\end{figure}
+\begin{figure}[htbp]
+\includegraphics[width=0.5\textwidth]{figures/McStas-scan-plot.png}
+\caption{Plot of a scan with ThALES instrument with a Vanadium sample. The instrument description retrieved from the instrument database}
+\label{fig:Nomad_ThALES_vanadium_scan}
+\end{figure}
+
+
+The framework consists in:
+\begin{itemize}
+\item one client library (C++)
+\item one simulation server
+\item one application manager server
+\item McStas instrument executables
+\end{itemize}
+
+The client is integrated in the data acquisition system at ILL, named Nomad, that can be started either in \emph{REAL} mode to control the instrument and acquire real data, or in \emph[SIMULATED] mode to communicate to the simulation server.
+
+The simulation server objective is to receive simulation requests from a client, schedule and launch the McStas instrument applications, read and cache the results, and send them back to the client.
+
+The managing of the application is performed using the Cameo library developed at the ILL (open source and publicly available). Cameo allows not only to control other applications (start, stop, etc.) but also communication between them with requester-responder publisher-subscriber models implemented using the Zmq library.
+
+The communication between the different components is sketched in Fig.~\ref{fig:DT_comm}
+
+\newcommand{\libpyvinyl}{libpyvinyl}
+
+\section{Something more about \libpyvinyl (by Shervin)} 
+
+  Goals:
+  \begin{itemize}
+  \item high level neutron and X-ray simulation API
+  \item providing harmonized user interface
+  \item allowing seamless interoperability of individual simulations
+  \item facilitating the concatenation of simulation steps into a simulation pipeline
+  \end{itemize}
+
+  How:
+  \begin{itemize}
+  \item The simulation workflow has been segmented in independent units
+  \item Abstraction of connections and components allow flexibility in inclusion of new simulation modules/softwares
+  \end{itemize}
+
+\begin{figure}[tp]
+    \begin{tikzpicture}[nodes={draw}]
+      \graph [layered layout] {
+        source -> optics // [layered layout]{
+          optical element 1 -> opt/\dots -> optical element N;}
+        -> sample
+        -> optics2/optics
+        -> detector;
+      };
+    \end{tikzpicture}
+\label{fig:instrument_diagram}
+\caption{A simplified description of an instrument and its elements}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/usecase_mono.png}
+    \caption{A visual representation of PaNOSC use case 18: In-silico Neutron Diffraction: precise tool for exact structural analysis and defect detection}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}[tp]
+
+  \begin{tikzpicture}[draw, text width=2.5cm,component align=first node]
+    \graph[layered layout,nodes={draw},component direction=right]{
+      instrument/Instrument[draw,text width=3cm]// [layered layout]{
+        calc1/calculator 1 -- calc2/\dots -- calc3/\dots -- calc4/\dots -- calcN/calculator N;
+        };
+        BaseCalculator[draw,text width=3cm] // [layered layout]{
+          engine -- parameters -- input/input data[x=0,y=0] -- output/output data;};
+        BaseData[regardless at={(4,-0.5)}] -> {input,output};
+        Parameter[regardless at={(4,1)}] -> parameters;
+      };
+      \draw (calc3) edge[<-] (BaseCalculator);
+  \end{tikzpicture}
+  \label{fig:libpyvinyl_class_relations}
+  \caption{Simplified diagram showing the relations between the main \libpyvinyl classes}
+\end{figure}
+
+\subsection{\libpyvinyl parameters usage example}
+  The Parameter class describes a single parameter intended to be an input for a calculator.
+
+  \begin{itemize}
+  \item no a priori for the type
+  \item usually a physical quantity that can be expressed by a floating point number or a string
+    
+  \item units can be defined and unit conversions taken into account automagically to provide to the calculator the value in the units it expects
+  \end{itemize}
+    \begin{lstlisting}
+energy_parameter = Parameter(name="energy", unit="meV", comment="Energy of emitted particles")
+energy_parameter.value = 5.0
+    \end{lstlisting}
+  
+  We defined the default unit to be meV, but since the object is aware of the unit, it is possible to provide in another energy unit using Pint.
+  \begin{lstlisting}
+import pint
+ureg = pint.UnitRegistry()
+energy_parameter.value = 5.0*ureg.eV
+  \end{lstlisting}
+
+\subsection{Parameters common to multiple calculators}
+
+  \begin{itemize}
+  \item same meaning
+  \item different units (maybe)
+  \item affecting multiple calculators
+  \end{itemize}
+
+ \textbf{ They need to be changed together when running the simulation:
+ }
+
+ \begin{tikzpicture}
+    \graph[layered layout]{
+      instrument[draw]//[layered layout]{
+        //[layered layout]{calc1 -> {par1, par2, par3};},
+        //[layered layout]{calc2 -> {par4, par5, par6}}
+        calc1 -> calc2;
+        mp1[draw,font=\bfseries] <- {par3,par4};
+        par6 -> mp2[draw,font=\bfseries];
+        };
+    };
+    \draw (calc1) edge[->] (calc2);
+  \end{tikzpicture}
+
+    \begin{itemize}
+    \item Example: master is the neutron energy, calc1 is source and calc2 is a monochromator
+      
+    \item A single parameter promoted as ``master'' to distinguish parameters to be changed by the ``end user'' or for setting up the workflow.
+    \end{itemize}
+  
+  \begin{lstlisting}
+myinstr.add_master_parameter("energy", {"calc1": "par3", "calc2":"par4"}, unit="GeV")
+myinstr.master["energy"] = 4.5 * ureg.keV
+\end{lstlisting}
+
+\section{Instrument repository}
+
+  GIT chosen for storing instrument descriptions in the form a python scripts following
+  the \libpyvinyl API.
+
+  Advantages of GIT:
+  \begin{itemize}
+  \item history of changes
+  \item integrated issue tracking system
+  \item automatic workflows for validation
+  \item openly accessible
+  \item free hosting
+  \item easy to clone, fork for special needs of the RIs
+  \end{itemize}
+
+   {Sustainability}
+    \begin{itemize}
+    \item instrument description maintained by instrument experts at RIs
+    \item users contributing with validations and debugging %(not really expected)
+    \end{itemize}
+ 
+  {\bfseries A dedicated python API is developed to allow end users (especially those not knowing git) to access the instrument description.}
+
+The current version of the repository is v0.1.0 and contains two fully implemented instruments:
+\begin{itemize}
+ \item SPB-SFX for EuXFEL (using SimEx-lite)
+\item ThALES for ILL (using McStas)
+\end{itemize}
+
+For ILL's implementation a new instrument base class (McStasInstrumentBase) has been implemented inheriting from \libpyvinyl Instrument class. McStasInstrumentBase offers convenient methods to desribe the instrument in a multi-calculator way, taking care of the input-output bridging between calculators. It is also a helper class describing samples and sample environments with their parameters with the related methods to select one among those implemented.
+
+The most relevant methods are:
+\begin{itemize}
+\item \verb|.set_sample_by_name(string)|: replacing the current sample with the one identified by the argument. Parameters are automatically added to the instrument.
+\item \verb|.set_sample_environment_by_name(string)|: replacing the current sample environment by the one identified by the argument
+\item \verb|.sample|: returning McStas component object representing the sample
+\item \verb|.force_compile(boolean)|: switching the McStasScript flag on all the calculators
+\item \verb|.sample_<box,cylinder,sphere>_shape(args)|: changing the shape and the value of the paramters of the sample
+\item \verb|.sim_neutrons(integer)|: changing the McStasScript setting on all the calculators
+\item \verb|set_seed(integer)|: changing the McStasscript setting on all the calculators
+\end{itemize}
+
+\subsection{Instrument repository API}
+  \begin{itemize}
+  \item Setup the API
+    \begin{lstlisting}
+from instrumentdatabaseapi import instrumentdatabaseapi as API
+repo = API.Repository()
+repo.init()
+\end{lstlisting}
+    
+\item Load the instrument and units
+\begin{itemize}
+\item Institute name
+\item Instrument name
+\item Version: HEAD for the current or date of last day of validity YYYY-MM-DD
+\item Flavour: if different alternative descriptions are possible (e.g. detailed vs simplified)
+\end{itemize}
+  \begin{lstlisting}
+myinstrument = repo.load("ILL","ThALES" , "HEAD", "mcstas", "full", dep=False)
+import pint
+ureg = pint.get_application_registry()
+\end{lstlisting}
+  \item Set simulation settings
+    \begin{lstlisting}
+myinstrument.set_instrument_base_dir("/tmp/ThALES_scan/")
+myinstrument.sim_neutrons(500000)
+myinstrument.set_seed(654321)
+    \end{lstlisting}
+
+  \item Set instrument parameters:
+    \begin{lstlisting}
+myinstrument.master["a2"] = myinstrument.energy_to_angle(4.98 * ureg.meV)
+myinstrument.master["a4"] = 60 * ureg.degree
+    \end{lstlisting}
+  \item Set sample parameters:
+    \begin{lstlisting}
+myinstrument.set_sample_by_name("vanadium")
+myinstrument.sample_cylinder_shape(0.005, 0.01)
+\end{lstlisting}
+\item Run simulations
+    \begin{lstlisting}
+np = (21 - 1) / 2
+dEI = 0.05
+import numpy
+myinstrument.force_compile(false)
+outputs = []
+for energy in numpy.arange(4.98 - np * dEI, 4.98 + np * dEI, dEI):
+  myinstrument.master["a6"] = myinstrument.energy_to_angle(energy * ureg.meV)
+  myinstrument.run()
+  outputs.append(myinstrument.output)
+    \end{lstlisting}
+  \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{unsrt}
