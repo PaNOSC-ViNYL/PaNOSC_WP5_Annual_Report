@@ -14,6 +14,22 @@
 \usepackage[style=numeric-comp,hyperref=true,maxnames=6,sorting=none]{biblatex}
 \addbibresource{references.bib}
 
+\usepackage{tikz}
+\usetikzlibrary {graphs,graphdrawing}
+\usegdlibrary{layered}
+\usegdlibrary{trees}
+
+\usetikzlibrary{backgrounds, fit}
+
+\tikzset{
+  invisible/.style={opacity=0},
+  visible on/.style={alt=#1{}{invisible}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+\tikzset{title/.style={fill=white,inner sep=0pt,font={\scshape},anchor=center,yshift=1pt}}
+
 
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -261,8 +277,8 @@ Approved:  Andy Götz\\\hline
 
 \section{Abstract}
 We report on the Deliverable D5.4 in work package 5 (Virtual Neutron and X--ray
-Laboratory ---- ViNYL) in the European Union Horizon 2020 project \emph{Photon
-  and Neutron Open Science Cloud ---- PaNOSC}. 
+Laboratory -- ViNYL) in the European Union Horizon 2020 project \emph{Photon
+  and Neutron Open Science Cloud -- PaNOSC}. 
 This report details the latest releases of  software developed under the umbrella of
 ViNYL including test suites, documentation. In addition, we report on a use case
 where ViNYL software is employed in an iterative data analysis workflow in serial
@@ -332,6 +348,75 @@ main concepts here:
 \item[Instrument] a container for integrating different Calculator objects into a complete start-to-end simulation workflow.
 \end{description}
 
+Figure~\ref{fig:libpyvinyl_class_relations} illustrates the relations among the
+base classes in libpyvinyl.
+\begin{figure}[tp]
+  \begin{tikzpicture}[draw, text width=2.5cm,component align=first node]
+    \graph[layered layout,nodes={draw},component direction=right]{
+      instrument/Instrument[draw,text width=3cm]// [layered layout]{
+        calc1/calculator 1 -- calc2/\dots -- calc3/\dots -- calc4/\dots -- calcN/calculator N;
+        };
+        BaseCalculator[draw,text width=3cm] // [layered layout]{
+          engine -- parameters -- input/input data[x=0,y=0] -- output/output data;};
+        BaseData[regardless at={(4,-0.5)}] -> {input,output};
+        Parameter[regardless at={(4,1)}] -> parameters;
+      };
+      \draw (calc3) edge[<-] (BaseCalculator);
+  \end{tikzpicture}
+  \caption{Simplified diagram showing the relations between the main libpyvinyl classes}
+  \label{fig:libpyvinyl_class_relations}
+\end{figure}
+
+  The Parameter class describes a single parameter intended to be an input for a
+  calculator with the following characteristics:
+  \begin{itemize}
+  \item no a priori for the type
+  \item usually a physical quantity that can be expressed by a floating point number or a string
+  \item units can be defined and unit conversions taken into account automagically to provide to the calculator the value in the units it expects
+  \end{itemize}
+
+  The following listing demonstrates the parameter handling in libpyvinyl:
+    \begin{lstlisting}
+energy_parameter = Parameter(name="energy", unit="meV", comment="Energy of emitted particles")
+energy_parameter.value = 5.0
+    \end{lstlisting}
+  
+  We defined the default unit to be meV, but since the object is aware of the unit, it is possible to provide in another energy unit using Pint.
+  \begin{lstlisting}
+import pint
+ureg = pint.UnitRegistry()
+energy_parameter.value = 5.0*ureg.eV
+  \end{lstlisting}
+
+\subsection{Parameters common to multiple calculators}
+If multiple calculators share common parameters,
+they need to be changed together when running the simulation:
+
+ \begin{tikzpicture}
+    \graph[layered layout]{
+      instrument[draw]//[layered layout]{
+        //[layered layout]{calc1 -> {par1, par2, par3};},
+        //[layered layout]{calc2 -> {par4, par5, par6}}
+        calc1 -> calc2;
+        mp1[draw,font=\bfseries] <- {par3,par4};
+        par6 -> mp2[draw,font=\bfseries];
+        };
+    };
+    \draw (calc1) edge[->] (calc2);
+  \end{tikzpicture}
+
+    \begin{itemize}
+    \item Example: master is the neutron energy, calc1 is source and calc2 is a monochromator
+      
+    \item A single parameter promoted as ``master'' to distinguish parameters to be changed by the ``end user'' or for setting up the workflow.
+    \end{itemize}
+  
+  \begin{lstlisting}
+myinstr.add_master_parameter("energy", {"calc1": "par3", "calc2":"par4"}, unit="GeV")
+myinstr.master["energy"] = 4.5 * ureg.keV
+\end{lstlisting}
+
+
 
 \subsection{Repository}
 \label{sec:lpv_repo}
@@ -356,7 +441,7 @@ libpyvinyl's source code, documentation site, testing status and use case.
 \end{table}
 
 The current release of libpyvinyl is
-\href{https://github.com/PaNOSC-ViNYL/libpyvinyl/releases/tag/v1.1.2}{version 1.1.2}. Installation proceeds either from the cloned repository, from the
+\href{HTTPS://GITHUB.COM/pAnosc-vInyl/LIBPYVINYL/RELEASES/TAG/V1.1.2}{version 1.1.2}. Installation proceeds either from the cloned repository, from the
 downloaded release tarball, or via the python package index as
 \begin{lstlisting}[language=Python]
 pip install libpyvinyl
@@ -388,7 +473,6 @@ he API to access the insturment database and make insturment descriptions availa
 \href{https://github.com/PaNOSC-ViNYL/instrument_database_API}{https://github.com/PaNOSC-ViNYL/instrument\_database\_API}
 
 \subsection{Structure}
-\subsection{Maintainance and contribution policy}
 
 \subsection{Installation and access}
 The repository can be cloned in local using git commands:
@@ -407,8 +491,102 @@ A workshop dedicated to WP5 tools and prospects would be ideal to reach both exp
 
 \subsection{User base}
 Currently limited but potentially every user submitting a proposal for beam time.
+\begin{figure}[tp]
+    \begin{tikzpicture}[nodes={draw}]
+      \graph [layered layout] {
+        source -> optics // [layered layout]{
+          optical element 1 -> opt/\dots -> optical element N;}
+        -> sample
+        -> optics2/optics
+        -> detector;
+      };
+    \end{tikzpicture}
+\caption{A simplified description of an instrument and its elements}
+\label{fig:instrument_diagram}
+\end{figure}
+
+The current version of the repository is v0.1.0 and contains two fully implemented instruments:
+\begin{itemize}
+ \item SPB-SFX for EuXFEL (using SimEx-lite)
+\item ThALES for ILL (using McStas)
+\end{itemize}
+
+For ILL's implementation a new instrument base class (McStasInstrumentBase) has been implemented inheriting from libpyvinyl Instrument class. McStasInstrumentBase offers convenient methods to desribe the instrument in a multi-calculator way, taking care of the input-output bridging between calculators. It is also a helper class describing samples and sample environments with their parameters with the related methods to select one among those implemented.
+
+The most relevant methods are:
+\begin{itemize}
+\item \verb|.set_sample_by_name(string)|: replacing the current sample with the one identified by the argument. Parameters are automatically added to the instrument.
+\item \verb|.set_sample_environment_by_name(string)|: replacing the current sample environment by the one identified by the argument
+\item \verb|.sample|: returning McStas component object representing the sample
+\item \verb|.force_compile(boolean)|: switching the McStasScript flag on all the calculators
+\item \verb|.sample_<box,cylinder,sphere>_shape(args)|: changing the shape and the value of the paramters of the sample
+\item \verb|.sim_neutrons(integer)|: changing the McStasScript setting on all the calculators
+\item \verb|set_seed(integer)|: changing the McStasscript setting on all the calculators
+\end{itemize}
+
+\subsection{Instrument repository API}
+
+First, the API is initialized, which provides access to the instruments
+represented in the instrument repository.
+\begin{lstlisting}
+from instrumentdatabaseapi import instrumentdatabaseapi as API
+repo = API.Repository()
+repo.init()
+\end{lstlisting}
+
+From here onwards, users interacts with libpyvinyl objects. In particular, they
+can load the instrument and units from a hierarchical tree where the different
+levels represent the Institute, the Instrument name, the Version (HEAD for the
+current or date of last day of validity YYYY-MM-DD) and the Flavour (e.g.
+detailed vs simplified) as examplified in the following listing:
+  \begin{lstlisting}
+myinstrument = repo.load("ILL","ThALES" , "HEAD", "mcstas", "full", dep=False)
+import pint
+ureg = pint.get_application_registry()
+\end{lstlisting}
+
+Simulation parameters are set to their values in the usual manner as defined by the
+libpyvinyl base class methods:
+\begin{lstlisting}
+myinstrument.set_instrument_base_dir("/tmp/ThALES_scan/")
+myinstrument.sim_neutrons(500000)
+myinstrument.set_seed(654321)
+\end{lstlisting}
+
+The same goes for physical and instrument parameters:
+\begin{lstlisting}
+myinstrument.master["a2"] = myinstrument.energy_to_angle(4.98 * ureg.meV)
+myinstrument.master["a4"] = 60 * ureg.degree
+\end{lstlisting}
+as well as for sample parameters:
+    \begin{lstlisting}
+myinstrument.set_sample_by_name("vanadium")
+myinstrument.sample_cylinder_shape(0.005, 0.01)
+\end{lstlisting}
+Finally, to run the simulation, again, the libpyvinyl method is used
+\begin{lstlisting}
+np = (21 - 1) / 2
+dEI = 0.05
+import numpy
+myinstrument.force_compile(false)
+outputs = []
+for energy in numpy.arange(4.98 - np * dEI, 4.98 + np * dEI, dEI):
+  myinstrument.master["a6"] = myinstrument.energy_to_angle(energy * ureg.meV)
+  myinstrument.run()
+  outputs.append(myinstrument.output)
+\end{lstlisting}
 
 
+These listings demonstrate in a concise way, how the various parts in ViNYL are
+now integrated into a seamless simulation environment: Instrument parameters and settings
+that correspond to their actual physical counterparts at the RI are loaded from
+a database as a single source of thruth, these parameters are then injected into
+the simulation setup and the actual simulation backengine is launched all from
+within a common programming environment, e.g. a python script, interactive
+session or jupyter notebook.
+
+We now continue or summary of achievements by going through the individual
+simulation libraries for neutron and photon science.
 
 \section{McStasScript\label{sec:mcstasscript}}
 
@@ -822,10 +1000,100 @@ One of the workflow's use cases is to optimize the sample-to-detector distance f
 \LARGE{(b)}
 \end{flushleft}
 \includegraphics[width=0.6\textwidth]{figures/index_rate.pdf} 
-\caption 
-{\label{fig:optSim}
+\caption{\label{fig:optSim}
 (a) An example SFX pattern for the simulation, the white rectangle boxes indicate found peaks. (b) The index rate curve as a function of the sample-to-detector distance with different X-ray energy densities.} 
 \end{figure}
+\clearpage
+\section{Use case: Towards Digital Twin}
+\subsection{Goal}
+The goal of this use case is to interface McStas simulations of an instrument from a research facility to the data acquisition system in order to offer to users the same experience as during their experiments. Users are then able to prepare proposals, preparing in advance their experiments optimizing the instrument settings to maximize their scientific outcome and reduce beam time needed.
+
+\subsection{Current status}
+The project is still in an advanced prototype state.
+A new tab dedicated to specific settings for the simulation mode has been added
+to the ILL data acquisition system Nomad (see Fig.~\ref{fig:Nomad_sim_settings}.
+
+The data acquisition is performed as for the real data and results are visualised and treated accordingly. 
+In Fig.~\ref{fig:Nomad_ThALES_vanadium_scan} a scan with the triple axis spectrometer ThALES is performed using a vanadium sample.
+
+\subsection{Repository}
+Currently in internal ILL gitlab, will be migrated to the PANOSC github repository in the next days.
+
+Everything is released under the GPLv3 licence.
+
+\subsection{Structure}
+\begin{figure}[tbh]
+\includegraphics[width=\textwidth]{figures/communication.dot.pdf}
+\caption{Digital Twin Communication Diagram.}
+\label{fig:DT_comm}
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=0.5\textwidth]{figures/McStas-settings.png}
+\caption{ILL's Nomad simulation settings tab}
+\label{fig:Nomad_sim_settings}
+\end{figure}
+\begin{figure}[htbp]
+\includegraphics[width=0.5\textwidth]{figures/McStas-scan-plot.png}
+\caption{Plot of a scan with ThALES instrument with a Vanadium sample. The instrument description retrieved from the instrument database}
+\label{fig:Nomad_ThALES_vanadium_scan}
+\end{figure}
+
+
+The framework consists in:
+\begin{itemize}
+\item one client library (C++)
+\item one simulation server
+\item one application manager server
+\item McStas instrument executables
+\end{itemize}
+
+The client is integrated in the data acquisition system at ILL, named Nomad, that can be started either in \emph{REAL} mode to control the instrument and acquire real data, or in \emph{SIMULATED} mode to communicate to the simulation server.
+The simulation server objective is to receive simulation requests from a client, schedule and launch the McStas instrument applications, read and cache the results, and send them back to the client.
+
+The managing of the application is performed using the Cameo library developed at the ILL (open source and publicly available). Cameo allows not only to control other applications (start, stop, etc.) but also communication between them with requester--responder publisher--subscriber models implemented using the Zmq library.
+
+The communication between the different components is sketched in Fig.~\ref{fig:DT_comm}
+
+
+\section{Use case: Characterization of BN targets with neutron scattering}
+With the aforementioned achievements, the realization of scientific use cases, such as PaNOSC use case 18: ``In-silico Neutron diffraction from Boro-carbon systems:
+precise and reliable tool for exact structural analysis and defect detection''
+are now within reach. While still work in progress, the following diagram illustrates the
+various components that needed to be provided and interfaced. This has now been
+achieved and the use case will soon be executed at ELI-ALPS.
+\marginpar{TODO: Mousumi, Gergo: Please add text or more details.}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/usecase_mono.png}
+    \caption{A visual representation of PaNOSC use case 18: In-silico Neutron Diffraction: precise tool for exact structural analysis and defect detection}
+    \label{fig:UseCase18}
+  \end{figure}
+
+
+
+  \appendix
+  \section{ViNYL software releases}
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}[ht]{l|c|l}
+      \textbf{Package name} & Latest Version at time of writing & DOI \\
+      \hline
+      libpyvinyl & 1.1.2 &  \href{https://doi.org/10.5281/zenodo.6558163}{10.5281/zenodo.6558163}\\
+      instrumentDatabaseAPI & x.y.z &  \href{https://doi.org/10.5281/zenodo.XXXXXXX}{10.5281/zenodo.XXXXXXX}\\
+      McStasScript & x.y.z &  \href{https://doi.org/10.5281/zenodo.XXXXXXX}{10.5281/zenodo.XXXXXXX}\\
+      simex-lite & x.y.z &  \href{https://doi.org/10.5281/zenodo.XXXXXXX}{10.5281/zenodo.XXXXXXX}\\
+      Oasys & x.y.z &  \href{https://doi.org/10.5281/zenodo.XXXXXXX}{10.5281/zenodo.XXXXXXX}\\
+      Wiser & x.y.z &  \href{https://doi.org/10.5281/zenodo.XXXXXXX}{10.5281/zenodo.XXXXXXX}\\
+      Comsyl & x.y.z &  \href{https://doi.org/10.5281/zenodo.XXXXXXX}{10.5281/zenodo.XXXXXXX}\\
+      Comsyl & x.y.z &  \href{https://doi.org/10.5281/zenodo.XXXXXXX}{10.5281/zenodo.XXXXXXX}\\
+      ... & ... & ...
+    \end{tabular}
+    \caption[ViNYL DOIs]{Released versions and DOI for ViNYL software packages}
+    \label{tab:vinyl_releases}
+  \end{table}
+    
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
