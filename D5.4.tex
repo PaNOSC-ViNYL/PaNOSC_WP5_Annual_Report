@@ -320,8 +320,8 @@ APIs (such as McStasScript, SIMEX, or Oasys) is secured at the level of
 individual RIs, this is, at the time of writing, much more uncertain in the case
 of libpyvinyl. It would be desirable that the development teams of
 individual simulation codes and frameworks can allocate sufficient resources to
-the maintenance and development of libpyvinyl within their budgets.
-Dedicated resources for the  library do currently not exist
+the maintenance and development of \textit{libpyvinyl} within their budgets.
+Dedicated resources for the  library do currently not exist. ELI colleagues prepared and performed a number of test cases for the GaussianSourceCalculator implementation in SimEx. These test cases include technical tests such as I/O validation, data flow validation, method calls, and default setups; and physics-based sanity checks on the results the calculator gives. The testing revealed some important hard-to-spot bugs related to the file locations. The test cases are currently merged into the main branch of SimExLite.
 
 \subsection{Structure of the library}
 \label{sec:lpv_structure}
@@ -461,7 +461,27 @@ A complete validation of the instruments has not been performed.
 The instrument database and its API designs have been leaded by ILL and co-designed with ESS and EuXFEL.
 
 %ESS have been involved in design of the instrument database and the structure of the API. 
-It is envisioned several ESS instruments and sample environments will be submitted to the database soon, further testing and extending the system as needed. The instrument database will also address task 5.3 at a higher level of ambition than foreseen at the start of the project.
+It is envisioned several ESS instruments and sample environments will be submitted to the database soon, further testing and extending the system as needed. The instrument database will also address task 5.3 at a higher level of ambition than foreseen at the start of the project. 
+
+In ViNYL platform, in the API layer, mainly SIMEX was used as main simulation framework, which could efficiently mimic X-ray source based beamline  (like XFEL), however requires additional functionalities and incorporation of certain features to mimic IR laser source, which is widely useful to probe ultrafast dynamics in materials (as in ELI-ALPS).  ELI colleagues partly addressed this problem, by testing and incorporating time-dependent density functional theory based tools within ASE (atomistic simulation environment) to describe ultrafast temporal modulations in laser fields and its interaction with materials of different dimensionalities. Associated Jupyter notebooks are already uploaded in pan-learning platform, and was used for in PaNOSC summer school. 
+
+Additionally, ELI-ALPS colleagues implemented strategies for simulation of scattering intensities by calculating the form factor. Using ASE platform for structure optimization of chosen structures, we obtained the modified geometry and resulting electronic charge density distribution which provides form factor. Output scattered field amplitude is thus modulated by charge, mass, and geometric factors, and reflects on the structure form factor due to the  interaction of the molecules with other external factors (like incident electric field, or other neighbouring molecules/medium). A class with a streamlined front-end interface is implemented for reading and postprocessing the charge density data, ultimately calculating the form factor and some other useful data, such as the integrated charge density. The class is also able to save the charge density in VTK format, so later it can be visualized with suitable software like ParaView. 
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/usecase_mono.png}
+    \caption{A visual representation of PaNOSC use case 18: In-silico Neutron Diffraction: precise tool for exact structural analysis and defect detection}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/panosc_diag2.png}
+    \caption{General workflow of the ViNYL simulation environment.}
+    \label{fig:my_label}
+\end{figure}
+
 
 \subsection{Repository}
 The database defined as a git repository hosted on the WP5 github organization as well as
